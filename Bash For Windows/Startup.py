@@ -38,10 +38,10 @@ systemvariables.exepath = os.path.dirname(os.path.realpath(__file__))
 systemvariables.settingspath = systemvariables.exepath + "/../.."
 
 # Check to make sure we are running on Windows and if not start bash
-if(platform.system() != "Windows"):
-    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-    os.system("bash")
-    exit()
+#if(platform.system() != "Windows"):
+#    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
+#    os.system("bash")
+#    exit()
     
 # Move to the root of the file structure
 os.chdir(systemvariables.exepath + "/../..")

@@ -38,7 +38,7 @@ def reg(string):
     if(ifvar == True):
         newstr = stringprt[1:]
         #print(newstr)
-        if(((((newstr == "usrsession") or (newstr == "HOME")) or (newstr == "exepath")) or (newstr == "USRDOCS")) or (newstr == "ROOT")):
+        if((((((newstr == "usrsession") or (newstr == "HOME")) or (newstr == "exepath")) or (newstr == "USRDOCS")) or (newstr == "ROOT")) or (newstr == "settingspath") or (newstr == "srcpath") or (newstr == "loginfopath") or (newstr == "usrpath") or (newstr == "bshpath") or (newstr == "lastdir")):
             #print("yes")
             if(newstr == "usrsession"):
                 print(systemvariables.usrsession)
@@ -48,6 +48,18 @@ def reg(string):
                 print(systemvariables.exepath)
             elif(newstr == "USRDOCS"):
                 print(systemvariables.USRDOCS)
+            elif(newstr == "settingspath"):
+                print(systemvariables.settingspath)
+            elif(newstr == "loginfopath"):
+                print(systemvariables.loginfopath)
+            elif(newstr == "srcpath"):
+                print(systemvariables.srcpath)
+            elif(newstr == "usrpath"):
+                print(systemvariables.usrpath)
+            elif(newstr == "bshpath"):
+                print(systemvariables.bshpath)
+            elif(newstr == "lastdir"):
+                print(systemvariables.lastdir)
             else:
                 print(systemvariables.ROOT)
         else:

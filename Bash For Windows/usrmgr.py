@@ -30,42 +30,23 @@ def logon():
     os.chdir(systemvariables.exepath)
     os.chdir("../../")
     incorrect = True
-    if(os.path.exists("Settings/ivhzadgzzoneth.bws") == True):
-        while(incorrect == True):
-            user = open("Settings/ivhzadgzzoneth.bws", "r")
-            userguess = input("Type a user name # ")
-            if(userguess == user.read()):
-                incorrect = False
-                systemvariables.usrsession = userguess
-            else:
-               print("Incorrect Username.")
-        incorrect = True
-        while(incorrect == True):
-            password = open("Settings/kvnnadgzzoneth.bws", "r")
-            passguess = input("password # ")
-            if(passguess == password.read()):
-               incorrect = False
-            else:
-               print("Incorrect Password.")
-        password.close()
-    else:
-        while(incorrect == True):
-            user = open("Settings/ivhzadgz.bws", "r")
-            userguess = input("Type a user name # ")
-            if(userguess == user.read()):
-               incorrect = False
-            else:
-               print("Incorrect Username.")
-        incorrect = True
-        while(incorrect == True):
-            password = open("Settings/kvnnadgz.bws", "r")
-            passguess = input("password # ")
-            if(passguess == password.read()):
-                incorrect = False
-                systemvariables.usrsession = userguess
-            else:
-                print("Incorrect Password.")
-        password.close()
+    while(incorrect == True):
+        user = open("Settings/ivhzadgz.bws", "r")
+        userguess = input("Type a user name # ")
+        if(userguess == user.read()):
+           incorrect = False
+        else:
+           print("Incorrect Username.")
+    incorrect = True
+    while(incorrect == True):
+        password = open("Settings/kvnnadgz.bws", "r")
+        passguess = input("password # ")
+        if(passguess == password.read()):
+            incorrect = False
+            systemvariables.usrsession = userguess
+        else:
+            print("Incorrect Password.")
+    password.close()
     print("Welcome to Bash(the Bourne Again Shell) for Windows!")
     user.close()
     bash.run()

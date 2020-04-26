@@ -21,14 +21,56 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import os
 import systemvariables
 
+# Variable
+currentdir = ""
+
 # Main Function
 def go(path):
+    currentdir = os.getcwd()
+    otherdir = systemvariables.lastdir
+    
+    # If we have inputed something special, go to a special place.
+    # If not, go to where directed.
     if(path == "~"):
         os.chdir(systemvariables.HOME)
+    elif(path == "-"):
+        os.chdir(systemvariables.lastdir)
     elif(path == "/"):
         os.chdir(systemvariables.ROOT)
+    elif(path == "$settingspath"):
+        os.chdir(systemvariables.settingspath)
+    elif(path == "$exepath"):
+        os.chdir(systemvariables.exepath)
+    elif(path == "/Bash"):
+        os.chdir(systemvariables.bshpath)
+    elif(path == "/Bash/Bash"):
+        os.chdir(systemvariables.settingspath)
+    elif(path == "/Bash/Users"):
+        os.chdir(systemvariables.usrpath)
+    elif(path == "/Bash/Bash/Settings"):
+        os.chdir(systemvariables.loginfopath)
+    elif(path == "/Bash/Bash/Source"):
+        os.chdir(systemvariables.srcpath)
+    elif(path == "/Bash/Bash/Source/Include"):
+        os.chdir(systemvariables.exepath)
+    elif(path == "$bshpath"):
+        os.chdir(systemvariables.bshpath)
+    elif(path == "$usrpath"):
+        os.chdir(systemvariables.usrpath)
+    elif(path == "$loginfopath"):
+        os.chdir(systemvariables.loginfopath)
+    elif(path == "$srcpath"):
+        os.chdir(systemvariables.srcpath)
     else:
         if(path == ""):
             go("~")
         else:
-            os.chdir(path)
+            if(os.path.exists(path) == True):
+                os.chdir(path)
+            else:
+                print("bash: cd:", path + ": No such file or directory")
+    # Set the lastdir system variable
+    systemvariables.lastdir = currentdir
+    
+    if(os.getcwd() == systemvariables.lastdir):
+        systemvariables.lastdir = otherdir

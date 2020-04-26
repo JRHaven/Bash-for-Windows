@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019 Jeremiah Haven
+Copyright 2019-2020 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -19,21 +19,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Libraries
 from time import sleep
-import os
-import username
-import ls
-import cd
-import systemvariables
-import pwd
-import socket
-import cat
-import apt
-import echo
-import nano
-import touch
-import rm
-import filechk
-import cp
+import os, username, ls, cd, systemvariables, pwd, socket, cat, apt
+import echo, nano, touch, rm, filechk, cp, pushd, popd
 
 # Main function. First Set all other system variables
 def run():
@@ -44,6 +31,16 @@ def run():
     systemvariables.HOME = os.getcwd()
     os.chdir("Documents")
     systemvariables.USRDOCS = os.getcwd()
+    os.chdir(systemvariables.settingspath)
+    systemvariables.settingspath = os.getcwd()
+    os.chdir("Settings")
+    systemvariables.loginfopath = os.getcwd()
+    os.chdir("../Source")
+    systemvariables.srcpath = os.getcwd()
+    os.chdir("../../Users")
+    systemvariables.usrpath = os.getcwd()
+    os.chdir("..")
+    systemvariables.bshpath = os.getcwd()
     zzz = 1
     
     # Get user name
@@ -54,6 +51,11 @@ def run():
     
     # Get back to "Home" folder
     cd.go("~")
+
+    # Reset the lastdir variable
+    systemvariables.lastdir = ""
+
+    # Do this until told to exit
     while(zzz == 1):
         # Change display depending on where the user is in the file system
         if(os.getcwd() == systemvariables.ROOT):
@@ -62,6 +64,18 @@ def run():
             display = "~"
         elif(os.getcwd() == systemvariables.USRDOCS):
             display = "~/Documents"
+        elif(os.getcwd() == systemvariables.settingspath):
+            display = "/Bash/Bash"
+        elif(os.getcwd() == systemvariables.loginfopath):
+            display = "/Bash/Bash/Settings"
+        elif(os.getcwd() == systemvariables.srcpath):
+            display = "/Bash/Bash/Source"
+        elif(os.getcwd() == systemvariables.usrpath):
+            display = "/Bash/Users"
+        elif(os.getcwd() == systemvariables.exepath):
+            display = "/Bash/Bash/Source/Include"
+        elif(os.getcwd() == systemvariables.bshpath):
+            display = "/Bash"
         else:
             display = os.getcwd()
             
@@ -76,7 +90,7 @@ def run():
         elif(command == "cd"):
             cd.go(input(""))
         elif(command == "pwd"):
-            print(pwd.get())
+            print(os.getcwd())
         elif(command == "cat"):
             cat.show(input(""))
         elif(command == "nano"):
@@ -107,6 +121,11 @@ def run():
             file = input("")
             newfile = input("")
             cp.copy(file, newfile)
+        elif(command == "pushd"):
+            path = input("")
+            pushd.go(path)
+        elif(command == "popd"):
+            popd.go()
         else:
             if(command == ""):
                 sleep(0)
@@ -120,7 +139,7 @@ def run():
                    else:
                         print("Bash for Windows does not know how to handle this. To give Bash for Windows a definition of what to do, make a setting for it.")
                 else:
-                    print('Bash: ' + command + " command not found")
+                    print(command + ": command not found")
     exit()
 
 # More checking for other scripts to use
