@@ -23,37 +23,73 @@ import username
 import systemvariables
 
 # Repair for anything missing in the base folder
-def baserepair():
-    if((os.path.exists("Settings/ivhzadgz.bws") == False) or (os.path.exists("Settings/kvnnadgz.bws") == False)):
-        username.get()
-    print("Solving Problems...")
-    usrname = open("../../Settings/ivhzadgz.bws")
-    os.mkdir("Bash")
-    os.mkdir("Bash/Users")
-    os.mkdir("Bash/Users/" + usrname.read())
-    os.mkdir("Bash/Users/" + usrname.read() + "/Downloads")
-    os.mkdir("Bash/Users/" + usrname.read() + "/Documents")
-    
 # Repair for anything missing in the base of the user folder
 def baseusrrepair():
+    # We need to be in this directory, stored as a System Variable we
+    # set at Startup
+    os.chdir(systemvariables.settingspath)
+
+    # If needed, create a new user account
     if((os.path.exists("Settings/ivhzadgz.bws") == False) or (os.path.exists("Settings/kvnnadgz.bws") == False)):
         username.get()
+    
     print("Solving Problems...")
-    usrname = open("../../Settings/ivhzadgz.bws")
-    os.mkdir("Bash/Users")
-    os.mkdir("Bash/Users/" + usrname.read())
-    os.mkdir("Bash/Users/" + usrname.read() + "/Downloads")
-    os.mkdir("Bash/Users/" + usrname.read() + "/Documents")
+
+    # Get the username information
+    username = open("Settings/ivhzadgz.bws")
+
+    # Put the contents of the username in a variable so we can use
+    # it any time without having to be in that directory
+    usrname = username.read()
+
+    # We don't need the origonal variable anymore
+    username.close()
+
+    # Start Recreating Folders
+    os.chdir("..")
+    os.mkdir("Users")
+    os.chdir("Users")
+    os.mkdir(usrname + "/")
+    os.chdir(usrname)
+    os.mkdir("Documents")
+    os.mkdir("Downloads")
+
+    # Success message and go to the correct directory
+    print("Repair has solved the problem")
+    os.chdir(systemvariables.exepath)
     
 # Like the function we just had, but only repairs in the user's personal folder
 def baseusrfilerepair():
+    # We need to be in this directory, stored as a System Variable we
+    # set at Startup
+    os.chdir(systemvariables.settingspath)
+
+    # If needed, create a new user account
     if((os.path.exists("Settings/ivhzadgz.bws") == False) or (os.path.exists("Settings/kvnnadgz.bws") == False)):
         username.get()
+    
     print("Solving Problems...")
-    usrname = open("../../Settings/ivhzadgz.bws")
-    os.mkdir("Bash/Users/" + usrname.read())
-    os.mkdir("Bash/Users/" + usrname.read() + "/Downloads")
-    os.mkdir("Bash/Users/" + usrname.read() + "/Documents")
+
+    # Get the username information
+    username = open("Settings/ivhzadgz.bws")
+
+    # Put the contents of the username in a variable so we can use
+    # it any time without having to be in that directory
+    usrname = username.read()
+
+    # We don't need the origonal variable anymore
+    username.close()
+
+    # Start Recreating Folders
+    os.chdir("../Users")
+    os.mkdir(usrname + "/")
+    os.chdir(usrname)
+    os.mkdir("Documents")
+    os.mkdir("Downloads")
+
+    # Success message and go to the correct directory
+    print("Repair has solved the problem")
+    os.chdir(systemvariables.exepath)
     
 # Repair for anything missing in the settings folder
 def settingsrepair():

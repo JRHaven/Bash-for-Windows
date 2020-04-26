@@ -27,6 +27,7 @@ import usrmgr
 import usrmgr2
 import repair
 import systemvariables
+import time
 
 # The commented out lines are for me to use for debugging purposes only.
 #print(os.getcwd())
@@ -34,6 +35,7 @@ import systemvariables
 
 # Set a system variable
 systemvariables.exepath = os.path.dirname(os.path.realpath(__file__))
+systemvariables.settingspath = systemvariables.exepath + "/../.."
 
 # Check to make sure we are running on Windows and if not start bash
 if(platform.system() != "Windows"):
@@ -45,29 +47,39 @@ if(platform.system() != "Windows"):
 os.chdir(systemvariables.exepath + "/../..")
 #print(os.getcwd())
 
-# Tell the login prompt what folder we are in
-usrmgr2.usrcheck(os.getcwd())
-username = open("Settings/ivhzadgz.bws" , "r")
+os.chdir("../..")
+#print(os.getcwd())
+
+usrname = open("Bash/Bash/Settings/ivhzadgz.bws")
 
 # See if any folders are deleted and if they are attempt to fix it using the repair script
-if(os.path.exists("Bash") == False):
-    choice = input("Unfortunatly, Bash for Windows could not find your data. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
-    if((choice == "y") or (choice == "Y")):
-        repair.baserepair()
-    else:
-        print("Abort.")
-elif(os.path.exists("Bash/Users") == False):
+if(os.path.exists("Bash/Users") == False):
     choice = input("Unfortunatly, Bash for Windows could not find your data. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
     if((choice == "y") or (choice == "Y")):
         repair.baseusrrepair()
     else:
         print("Abort.")
-elif(os.path.exists("Bash/Users/" + username.read()) == False):
+
+# Go back to here so that we don't trigger an unneeded repair
+os.chdir(systemvariables.settingspath + "/../..")
+
+# Check if the user folder was deleted
+if(os.path.exists("Bash/Users/" + usrname.read()) == False):
     choice = input("Unfortunatly, Bash for Windows could not find your data. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
     if((choice == "y") or (choice == "Y")):
         repair.baseusrfilerepair()
     else:
         print("Abort.")
-        
+
+# We don't need this file to stay open
+usrname.close()
+
+# Go back to here so that we don't trigger an unneeded repair
+os.chdir(systemvariables.settingspath + "/../..")
+
+# Tell the login prompt what folder we are in
+usrmgr2.usrcheck(os.getcwd())
+username = open("Bash/Bash/Settings/ivhzadgz.bws" , "r")
+
 # Call the login prompt
 usrmgr.logon()
