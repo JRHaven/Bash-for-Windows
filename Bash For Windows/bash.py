@@ -81,6 +81,34 @@ def run():
             
         # Prompt
         command = input(usr + "@" + socket.gethostname() + ":" + display + " $ ")
+
+        # Find a space. If one is found, put it in another variable.
+        args = command.find(" ", 0, len(command))
+        arg1 = ""
+
+        # Counters
+        i = 0
+        j = 0
+        k = 0
+
+        # Only do it if there is indeed a space
+        if(args != -1):
+            for i in command:
+                # Only do this after a space
+                if(k > args):
+                    # Put what we are looking at in the arg1 variable, delete the character
+                    arg1 = arg1 + i
+                    command = command[0 : k : ]
+                else:
+                    k += 1
+        
+        # Reset a counter
+        i = 0
+
+        # If we have at least 1 space, make sure you take out the last character
+        # in the command variable that happens to be a space
+        if(args != -1):
+            command = command[:-1:]
         
         # Run the command. If it dosen't exist, display a message
         if(command == "exit"):
@@ -88,41 +116,41 @@ def run():
         elif(command == "ls"):
             ls.show()
         elif(command == "cd"):
-            cd.go(input(""))
+            cd.go(arg1)
         elif(command == "pwd"):
             print(os.getcwd())
         elif(command == "cat"):
-            cat.show(input(""))
+            cat.show(arg1)
         elif(command == "nano"):
-            file = input("")
+            file = arg1
             nano.write(file) 
         elif(command == "clear"):
             os.system("cls")
         elif(command == "sudo apt install"):
-            install = input("")
+            install = arg1
             apt.install(install)
         elif(command == "lsvar"):
             ls.vars()
         elif(command == "echo"):
-            echo.reg(input(""))
+            echo.reg(arg1)
         elif(command == "touch"):
-            touch.write(input(""))
+            touch.write(arg1)
         elif(command == "rm"):
-            rem = input("")
+            rem = arg1
             rm.remove(rem)
         elif(command == "mv"):
-            file = input("")
-            dstfile = input("")
+            file = arg1
+            dstfile = arg1
             if(filechk.check(file) == True):
                 os.rename(file, dstfile)
             else:
                 print("mv: The file", file, "dosen't exist so not moved!")
         elif(command == "cp"):
-            file = input("")
-            newfile = input("")
+            file = arg1
+            newfile = arg1
             cp.copy(file, newfile)
         elif(command == "pushd"):
-            path = input("")
+            path = arg1
             pushd.go(path)
         elif(command == "popd"):
             popd.go()
@@ -131,7 +159,7 @@ def run():
                 sleep(0)
             else:
                 if(os.path.exists(os.getcwd() + "/" + command) == True):
-                   typee = input("")
+                   typee = arg1
                    if(typee == "exe"):
                        os.system(command)
                    elif(typee == "py"):
