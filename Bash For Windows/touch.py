@@ -21,7 +21,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import os
 
 # Main function
-def write(filename):
-    new = open(filename, "w")
-    new.write("")
-    new.close()
+def write(args):
+    i = 0
+    for j in args:
+        filename = args[i]
+        new = open(filename, "w")
+        new.write("")
+        new.close()

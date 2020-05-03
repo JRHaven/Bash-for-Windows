@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019 Jeremiah Haven
+Copyright 2019-2020 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -18,13 +18,53 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Cat is a basic script to show the contents of a file
 
 # Only need one library
-import os
+import os, touch, rm
 
 # Main Function. First check if the file exists
-def show(file):
+def show(args):
+    file = args[0]
+    output = ""
+    firstLetter = ""
+    flag = 0
     if(os.path.exists(file) == False):
-        print("cat: " + file + " file not found")
+        output = "cat: " + file + " file not found"
     else:
-         show = open(file)
-         print(show.read())
-         show.close()
+        show = open(file)
+        output = show.read()
+        show.close()
+        if(">>" in args):
+            i = 0
+            index = 0
+            flag = 1
+            for j in args:
+                if(i == 0):
+                    i += 1
+                    continue
+                if(args[i] == ">>"):
+                    index = i + 1
+                    break
+                i += 1
+            giveTouch = [args[index]]
+            touch.write(giveTouch)
+            file = open(args[index], "a")
+            file.write(output)
+            file.close()
+        elif(">" in args):
+            if(flag == 0):
+                i = 0
+                index = 0
+                for j in args:
+                    if(i == 0):
+                        i += 1
+                        continue
+                    if(args[i] == ">"):
+                        index = i + 1
+                        break
+                    i += 1
+                giveTouch = [args[index]]
+                touch.write(giveTouch)
+                fileWrite = open(args[index], "w")
+                fileWrite.write(output)
+                fileWrite.close()
+        else:
+            print(output)

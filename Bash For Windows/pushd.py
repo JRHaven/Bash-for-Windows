@@ -72,7 +72,8 @@ def remove(times):
     #print(systemvariables.directorystack)
 
 # Main Function
-def go(path):
+def go(args):
+    path = args[0]
     # Check to make sure the path exists.
     if(os.path.exists(path) == True):
         # Add the current directory to the stack using the function we made earlier

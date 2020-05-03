@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019 Jeremiah Haven
+Copyright 2019-2020 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -22,11 +22,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Libraries
 import os
 import repair
-import bash
-import systemvariables
+import bash, platform
+import systemvariables, oschk
+
+# Clear the screen to get rid of the messages from the imported libraries
+os.system("cls")
 
 # Login Prompt
 def logon():
+    # Check again to make sure we are running Windows
+    oschk.check()
+
     os.chdir(systemvariables.exepath)
     os.chdir("../../")
     incorrect = True
@@ -38,6 +44,13 @@ def logon():
         else:
            print("Incorrect Username.")
     incorrect = True
+
+    # Check double check to make sure we are running Windows
+    #if(platform.system() != "Windows"):
+    #    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
+    #    os.system("bash")
+    #    exit()
+    
     while(incorrect == True):
         password = open("Settings/kvnnadgz.bws", "r")
         passguess = input("password # ")
@@ -55,6 +68,7 @@ def logon():
 def checkpassword():
     session = systemvariables.usrsession
     user = ""
+    incorrect = True
     if(os.path.exists("Settings/ivhzadgzzoneth.bws") == True):
         potentialusr1 = open("Settings/ivhzadgzzoneth.bws" + "r")
         if(session == potentialusr1.read()):

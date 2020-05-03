@@ -34,4 +34,3 @@ def copy(srcfile, dstfile):
         os.rename(copiedfile, dstfile)
     else:
         print("cp: The file", srcfile, "does not exist so not copying!")
-        

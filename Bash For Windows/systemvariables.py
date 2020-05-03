@@ -31,3 +31,5 @@ usrpath = ""
 bshpath = ""
 lastdir = ""
 directorystack = ["","","","","","","",""]
+
+# If the end user tries to run bash.py without Startup.py, then display this message

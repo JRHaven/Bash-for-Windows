@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019 Jeremiah Haven
+Copyright 2019-2020 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -25,12 +25,43 @@ import glob
 import systemvariables
 
 # Function that prints out all files 1 by 1 virtically without any other characters on the screen
-def show():
-    dir_list = os.listdir(os.getcwd())
-    i = 0
-    for dirs in dir_list:
-        print(dir_list[i])
-        i += 1
+def show(args):
+    if(args[0] != ""):
+        if(os.path.exists(args[0]) == True):
+            lastDir = os.getcwd()
+            os.chdir(args[0])
+            dir_list = os.listdir(os.getcwd())
+            hold = []
+            i = 0
+            j = 0
+            for dirs in dir_list:
+                #print(os.path.isdir(str(dir_list[i])))
+                if(os.path.isdir(dir_list[i]) == True):
+                    print(dir_list[i] + " [DIR]")
+                else:
+                    hold.append(dir_list[i])
+                i += 1
+            for k in hold:
+                print(hold[j])
+                j += 1
+            os.chdir(lastDir)
+        else:
+            print("ls: cannot access '" + args[0] + "': No such file or directory")
+    else:
+        dir_list = os.listdir(os.getcwd())
+        hold = []
+        i = 0
+        j = 0
+        for dirs in dir_list:
+            #print(os.path.isdir(str(dir_list[i])))
+            if(os.path.isdir(dir_list[i]) == True):
+                print(dir_list[i] + " [DIR]")
+            else:
+                hold.append(dir_list[i])
+            i += 1
+        for k in hold:
+            print(hold[j])
+            j += 1
         
 # Function that returns a list of everything in the current directory
 def list():
@@ -45,3 +76,9 @@ def vars():
     print("ROOT:", systemvariables.ROOT)
     print("exepath:", systemvariables.exepath)
     print("USRDOCS:", systemvariables.USRDOCS)
+    print("settingspath:", systemvariables.settingspath)
+    print("loginfopath:", systemvariables.loginfopath)
+    print("srcpath:", systemvariables.srcpath)
+    print("bshpath:", systemvariables.bshpath)
+    print("lastdir:", systemvariables.lastdir)
+    print("directorystack:", systemvariables.directorystack)

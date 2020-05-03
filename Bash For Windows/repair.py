@@ -20,7 +20,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Libraries
 import os
 import username
-import systemvariables
+import systemvariables, mkdir
 
 # Repair for anything missing in the base folder
 # Repair for anything missing in the base of the user folder
@@ -98,3 +98,16 @@ def settingsrepair():
     os.mkdir("Settings")
     username.get(os.getcwd())
     os.chdir(systemvariables.exepath + "/../..")
+
+# Repair the Documents Folder
+def docs():
+    print("Solving Problems")
+    os.chdir(systemvariables.HOME)
+    mkdir.create(["Documents"])
+    if(os.path.exists("Documents") == True):
+        print("Success! Note: Anything that was in the Documents folder before was deleted.")
+        return True
+    else:
+        systemvariables.USRDOCS = "null"
+        print("Failed. USRDOCS Variable set as null.")
+        return False

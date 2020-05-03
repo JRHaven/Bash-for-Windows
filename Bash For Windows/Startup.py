@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019 Jeremiah Haven
+Copyright 2019-2020 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -19,8 +19,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Import libraries
 import platform
-import bash
 import os
+# If we are not in the right place, get us to the right place
+if(os.path.exists(os.getcwd() + "/../Include") == False):
+    os.chdir("Bash/Bash/Source/Include")
+import bash
 import os.path
 import username
 import usrmgr
@@ -34,14 +37,14 @@ import time
 #print(os.path.dirname(os.path.realpath(__file__)))
 
 # Set a system variable
-systemvariables.exepath = os.path.dirname(os.path.realpath(__file__))
+systemvariables.exepath = os.getcwd()
 systemvariables.settingspath = systemvariables.exepath + "/../.."
 
 # Check to make sure we are running on Windows and if not start bash
-if(platform.system() != "Windows"):
-    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-    os.system("bash")
-    exit()
+#if(platform.system() != "Windows"):
+#    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
+#    os.system("bash")
+#    exit()
     
 # Move to the root of the file structure
 os.chdir(systemvariables.exepath + "/../..")

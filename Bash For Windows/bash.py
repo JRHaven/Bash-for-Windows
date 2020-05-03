@@ -19,18 +19,36 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Libraries
 from time import sleep
-import os, username, ls, cd, systemvariables, pwd, socket, cat, apt
-import echo, nano, touch, rm, filechk, cp, pushd, popd
+import os, username, ls, cd, systemvariables, pwd, socket, cat
+import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
+import mv, oschk, repair
 
 # Main function. First Set all other system variables
 def run():
+    # Check once again to make sure we are running Windows
+    oschk.check()
     os.chdir(systemvariables.exepath)
     os.chdir("../../../../")
     systemvariables.ROOT = os.getcwd()
     os.chdir("Bash/Users/" + systemvariables.usrsession)
     systemvariables.HOME = os.getcwd()
-    os.chdir("Documents")
-    systemvariables.USRDOCS = os.getcwd()
+    if(os.path.exists("Documents") == False):
+        print("Unfortunatly, Bash for Windows cannot find your documents.")
+        prompt = input("Do you want to try to repair the problem? [Y,n] ")
+        if(prompt == "n"):
+            print("Abort.")
+            systemvariables.USRDOCS = "null"
+        elif(prompt == "N"):
+            print("Abort.")
+            systemvariables.USRDOCS = "null"
+        else:
+            success = repair.docs()
+            if(success == True):
+                os.chdir("Documents")
+                systemvariables.USRDOCS = os.getcwd()
+    else:
+        os.chdir("Documents")
+        systemvariables.USRDOCS = os.getcwd()
     os.chdir(systemvariables.settingspath)
     systemvariables.settingspath = os.getcwd()
     os.chdir("Settings")
@@ -84,7 +102,7 @@ def run():
 
         # Find a space. If one is found, put it in another variable.
         args = command.find(" ", 0, len(command))
-        arg1 = ""
+        argsArr = ['']
 
         # Counters
         i = 0
@@ -95,15 +113,23 @@ def run():
         if(args != -1):
             for i in command:
                 # Only do this after a space
-                if(k > args):
-                    # Put what we are looking at in the arg1 variable, delete the character
-                    arg1 = arg1 + i
-                    command = command[0 : k : ]
+                if(j > args):
+                    # If we come across a space, add an item to the array of arguments and skip the rest
+                    if(i == " "):
+                        k += 1
+                        argsArr.append("")
+                        continue
+
+                    # Take the current item in the args array and put in each character of the input
+                    # string, then delete that same character from the input string
+                    argsArr[k] = argsArr[k] + i
+                    command = command[0 : j : ]
                 else:
-                    k += 1
-        
-        # Reset a counter
+                    j += 1
+        # Reset the counters
         i = 0
+        j = 0
+        k = 0
 
         # If we have at least 1 space, make sure you take out the last character
         # in the command variable that happens to be a space
@@ -114,58 +140,73 @@ def run():
         if(command == "exit"):
             zzz = 0
         elif(command == "ls"):
-            ls.show()
+            ls.show(argsArr)
         elif(command == "cd"):
-            cd.go(arg1)
+            cd.go(argsArr)
         elif(command == "pwd"):
             print(os.getcwd())
         elif(command == "cat"):
-            cat.show(arg1)
+            cat.show(argsArr)
         elif(command == "nano"):
-            file = arg1
+            file = argsArr
+            nano.write(file) 
+        elif(command == "vi"):
+            file = argsArr
+            nano.write(file) 
+        elif(command == "vim"):
+            file = argsArr
+            nano.write(file) 
+        elif(command == "emacs"):
+            file = argsArr
             nano.write(file) 
         elif(command == "clear"):
             os.system("cls")
-        elif(command == "sudo apt install"):
-            install = arg1
-            apt.install(install)
         elif(command == "lsvar"):
             ls.vars()
         elif(command == "echo"):
-            echo.reg(arg1)
+            echo.reg(argsArr)
         elif(command == "touch"):
-            touch.write(arg1)
+            touch.write(argsArr)
         elif(command == "rm"):
-            rem = arg1
+            rem = argsArr
             rm.remove(rem)
         elif(command == "mv"):
-            file = arg1
-            dstfile = arg1
-            if(filechk.check(file) == True):
-                os.rename(file, dstfile)
-            else:
-                print("mv: The file", file, "dosen't exist so not moved!")
+            file = argsArr[0]
+            dstfile = argsArr[1]
+            mv.move(file, dstfile)
         elif(command == "cp"):
-            file = arg1
-            newfile = arg1
+            file = argsArr[0]
+            newfile = argsArr[1]
             cp.copy(file, newfile)
         elif(command == "pushd"):
-            path = arg1
+            path = argsArr
             pushd.go(path)
         elif(command == "popd"):
             popd.go()
+        elif(command == "uname"):
+            if(argsArr[0] == "-g"):
+                print("Bash for Windows: The Bourne Again Shell! Version 1.0")
+                print("Taking you to the GitHub page...")
+                os.system("iexplore https://github.com/JR-Tech-and-Software/Bash-for-Windows")
+            else:
+                print("Bash for Windows: The Bourne Again Shell! Version 1.0")
+                print("\nAll the code is avalible at GitHub! Check it out! Use the -g argument")
+                print("to be taken to the page!\n\nBash for Windows is under the MIT License.")
+                print("Check it out on GitHub as well.")
+        elif(command == "mkdir"):
+            mkdir.create(argsArr)
         else:
             if(command == ""):
                 sleep(0)
             else:
                 if(os.path.exists(os.getcwd() + "/" + command) == True):
-                   typee = arg1
+                   typee = argsArr[0]
                    if(typee == "exe"):
                        os.system(command)
                    elif(typee == "py"):
                        os.system("py " + command)
                    else:
-                        print("Bash for Windows does not know how to handle this. To give Bash for Windows a definition of what to do, make a setting for it.")
+                        print(command + ": command not found")
                 else:
                     print(command + ": command not found")
     exit()
@@ -187,7 +228,11 @@ def passcheck():
             password = open("Settings/kvnnadgz.bws", "r")
             passguess = input("password # ")
             if(passguess == password.read()):
-               incorrect = False
+                incorrect = False
             else:
-               print("Incorrect Password.")
+                print("Incorrect Password.")
         password.close()
+
+# If the end user tries to run bash.py without Startup.py, then display this message
+print("This file isn't ment to be run by itself. To run Bash for Windows,")
+print("run the Startup program.")
