@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019 Jeremiah Haven
+Copyright 2019-2020 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -36,14 +36,14 @@ def baseusrrepair():
     print("Solving Problems...")
 
     # Get the username information
-    username = open("Settings/ivhzadgz.bws")
+    usrnam = open("Settings/ivhzadgz.bws")
 
     # Put the contents of the username in a variable so we can use
     # it any time without having to be in that directory
-    usrname = username.read()
+    usrname = usrnam.read()
 
     # We don't need the origonal variable anymore
-    username.close()
+    usrnam.close()
 
     # Start Recreating Folders
     os.chdir("..")
@@ -71,14 +71,14 @@ def baseusrfilerepair():
     print("Solving Problems...")
 
     # Get the username information
-    username = open("Settings/ivhzadgz.bws")
+    usrnam = open("Settings/ivhzadgz.bws")
 
     # Put the contents of the username in a variable so we can use
     # it any time without having to be in that directory
-    usrname = username.read()
+    usrname = usrnam.read()
 
     # We don't need the origonal variable anymore
-    username.close()
+    usrnam.close()
 
     # Start Recreating Folders
     os.chdir("../Users")

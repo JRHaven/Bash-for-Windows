@@ -59,6 +59,7 @@ def run():
     systemvariables.usrpath = os.getcwd()
     os.chdir("..")
     systemvariables.bshpath = os.getcwd()
+
     zzz = 1
     
     # Get user name

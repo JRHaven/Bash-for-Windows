@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019 Jeremiah Haven
+Copyright 2019-2020 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -31,12 +31,5 @@ def usrcheck(path):
             repair.settingsrepair()
         else:
             print("Abort.")
-    elif((os.path.exists("Bash/Bash/Settings/ivhzadgz.bws") == False) or (os.path.exists("Bash/Bash/Settings/kvnnadgz.bws") == False)):
-        choice = input("Unfortunatly, Bash for Windows could not find user settings. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
-        if((choice == "y") or (choice == "Y")):
-            repair.usersettingsrepair()
-        else:
-            print("Abort.")
-            logon()
     else:
         usrmgr.logon()
