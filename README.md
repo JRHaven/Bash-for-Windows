@@ -12,7 +12,7 @@ Bash for Windows in another language.
 # Licensing
 Bash for Windows, along with all my other code, is under the MIT License.
 
-Copyright 2020 Jeremiah Haven
+Copyright 2019-2020 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
