@@ -21,7 +21,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # that "stack". Really useful!
 
 # Libraries
-import os, systemvariables, cd
+import os, systemvariables
 
 # Function to add a directory to the stack
 def add(path):
@@ -98,8 +98,8 @@ def go(args):
 
         # Finally, display the display we made plus the current directory we
         # are in, but only after going to that directory that is first in
-        # the stack
-        cd.go(path)
+        # the stack. Use os.chdir instead of cd.go to avoid an issue
+        os.chdir(path)
         print(stackDisplay, os.getcwd())
     else:
         # Directory Not Found Error
