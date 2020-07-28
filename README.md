@@ -6,7 +6,8 @@ that isn't compatible with WSL or for people that don't want to use WSL.
 ## Installation
 In the GitHub Page, go to the Releases tab and download the latest zip of the install files. Unzip that file
 and run the Setup.exe file. There is also a Readme file in that zip file which will help guide you through the
-Installation process.
+Installation process. I will be making a video over all of Bash for Windows on
+my YouTube Channel soon.
 
 ## Uninstallation
 Bash for Windows does not leave anything in the Windows Registry or deep in the file system. To remove Bash
