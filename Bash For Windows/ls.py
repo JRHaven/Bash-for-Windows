@@ -20,16 +20,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Libraries
 from os import walk
-import os
-import glob
+from time import sleep
+import os, glob, rm, touch
 import systemvariables
 
 # Function that prints out all files 1 by 1 virtically without any other characters on the screen
 def show(args):
-    if(args[0] != ""):
+    # Store all output in a variable
+    output = ""
+
+    # If we don't request to list the current directory and don't want to send output of current
+    # directory to file, do the following:
+    if((args[0] != "") and ((args[0] != ">") and (args[0] != ">>"))):
+        # Make sure the directory requested exists
         if(os.path.exists(args[0]) == True):
+            # Remember what directory we are currently in then change to the requested directory.
             lastDir = os.getcwd()
             os.chdir(args[0])
+
+            # Get a listing fo what is in the directory, then list them in a fancy way
             dir_list = os.listdir(os.getcwd())
             hold = []
             i = 0
@@ -37,17 +46,65 @@ def show(args):
             for dirs in dir_list:
                 #print(os.path.isdir(str(dir_list[i])))
                 if(os.path.isdir(dir_list[i]) == True):
-                    print(dir_list[i] + " [DIR]")
+                    if(i == len(dir_list) - 1):
+                        output = output + dir_list[i] + " [DIR]"
+                    else:
+                        output = output + dir_list[i] + " [DIR]\n"
                 else:
                     hold.append(dir_list[i])
                 i += 1
             for k in hold:
-                print(hold[j])
+                if(j == len(hold) - 1):
+                    output = output + hold[j]
+                else:
+                    output = output + hold[j] + "\n"
                 j += 1
+
+            # Go to the directory we were just in.
             os.chdir(lastDir)
+
+            # If asked to do so, send output to a file. Either overwrite a file or append to it.
+            if(">>" in args):
+                i = 0
+                index = 0
+                for j in args:
+                    if(i == 0):
+                        i += 1
+                        continue
+                    if(args[i] == ">>"):
+                        index = i + 1
+                        break
+                    i += 1
+                file = open(args[index], "a")
+                file.write("\n" + output)
+                file.close()
+            elif(">" in args):
+                i = 0
+                index = 0
+                for j in args:
+                    if(i == 0):
+                        i += 1
+                        continue
+                    if(args[i] == ">"):
+                        index = i + 1
+                        break
+                    i += 1
+                theFakeArgs = [args[index]]
+                if(os.path.exists(args[index]) == True):
+                    rm.remove(theFakeArgs)
+                file = open(args[index], "w")
+                file.write(output)
+                file.close()
+            # If we don't want to send output of command to a file, print the output to the screen.
+            else:
+                print(output)
         else:
+            # Error Message
             print("ls: cannot access '" + args[0] + "': No such file or directory")
-    else:
+
+    # Either print listing of current directory or send output of command to file.
+    # Pretty much the same as before.
+    elif((args[0] == "") or (args[0] == ">") or args[0] == ">>"):
         dir_list = os.listdir(os.getcwd())
         hold = []
         i = 0
@@ -55,13 +112,40 @@ def show(args):
         for dirs in dir_list:
             #print(os.path.isdir(str(dir_list[i])))
             if(os.path.isdir(dir_list[i]) == True):
-                print(dir_list[i] + " [DIR]")
+                if(os.path.isdir(dir_list[i]) == True):
+                    if(i == len(dir_list) - 1):
+                        if(len(hold) == 0):
+                            output = output + dir_list[i] + " [DIR]"
+                        else:
+                            output = output + dir_list[i] + " [DIR]\n"
+                    else:
+                        output = output + dir_list[i] + " [DIR]\n"
             else:
                 hold.append(dir_list[i])
             i += 1
         for k in hold:
-            print(hold[j])
+            if(j == len(hold) - 1):
+                output = output + hold[j]
+            else:
+                output = output + hold[j] + "\n"
             j += 1
+        if(">>" in args):
+            i = 0
+            index = 1
+            file = open(args[index], "a")
+            file.write("\n" + output)
+            file.close()
+        elif(">" in args):
+            i = 0
+            index = 1
+            theFakeArgs = [args[index]]
+            if(os.path.exists(args[index]) == True):
+                rm.remove(theFakeArgs)
+            file = open(args[index], "w")
+            file.write(output)
+            file.close()
+        else:
+            print(output)
         
 # Function that returns a list of everything in the current directory
 def list():
