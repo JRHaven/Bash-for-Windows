@@ -23,9 +23,7 @@ import platform, os
 
 # Main Function
 def check():
-    '''
     if(platform.system() != "Windows"):
         print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
         os.system("bash")
         exit()
-    '''
