@@ -17,21 +17,26 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
 # Cat is a basic script to show the contents of a file
 
-# Only need one library
+# Libraries
 import os, touch, rm
 
 # Main Function. First check if the file exists
 def show(args):
+    # Get the file to print out from our array of arguments
     file = args[0]
     output = ""
     firstLetter = ""
     flag = 0
+    # Make sure the requested file exists and is indeed a file and not a folder.
     if(os.path.exists(file) == False):
-        output = "cat: " + file + " file not found"
+        print("cat: " + file + " file not found")
+    elif(os.path.isdir(file) == True):
+        print("cat: " + file + ": Is a directory")
     else:
         show = open(file)
         output = show.read()
         show.close()
+        # If told to do so, either append or overwrite a file where we send all output to
         if(">>" in args):
             i = 0
             index = 0
@@ -67,4 +72,5 @@ def show(args):
                 fileWrite.write(output)
                 fileWrite.close()
         else:
+            # If not told to send output to a file, print to screen.
             print(output)
