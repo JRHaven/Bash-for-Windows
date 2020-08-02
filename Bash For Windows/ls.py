@@ -139,15 +139,25 @@ def list():
 
 # Function that prints out all of the variables, unlike the echo script that only prints out 1 requested
 # variable
-def vars():
-    print("usrsession:", systemvariables.usrsession)
-    print("HOME:", systemvariables.HOME)
-    print("ROOT:", systemvariables.ROOT)
-    print("exepath:", systemvariables.exepath)
-    print("USRDOCS:", systemvariables.USRDOCS)
-    print("settingspath:", systemvariables.settingspath)
-    print("loginfopath:", systemvariables.loginfopath)
-    print("srcpath:", systemvariables.srcpath)
-    print("bshpath:", systemvariables.bshpath)
-    print("lastdir:", systemvariables.lastdir)
-    print("directorystack:", systemvariables.directorystack)
+def vars(args):
+    output = ""
+    output = output + "usrsession: " + systemvariables.usrsession + "\n"
+    output = output + "HOME: " + systemvariables.HOME + "\n"
+    output = output + "ROOT: " + systemvariables.ROOT + "\n"
+    output = output + "exepath: " + systemvariables.exepath + "\n"
+    output = output + "USRDOCS: " + systemvariables.USRDOCS + "\n"
+    output = output + "settingspath: " + systemvariables.settingspath + "\n"
+    output = output + "loginfopath: " + systemvariables.loginfopath + "\n"
+    output = output + "srcpath: " + systemvariables.srcpath + "\n"
+    output = output + "bshpath: " + systemvariables.bshpath + "\n"
+    output = output + "lastdir: " + systemvariables.lastdir + "\n"
+    output = output + "directorystack: " + str(systemvariables.directorystack)
+    flag = 0
+    if(">>" in args):
+        flag = 1
+        tofile.write(">>", output, args[1])
+    elif(">" in args):
+        if(flag == 0):
+            tofile.write(">", output, args[1])
+    else:
+        print(output)
