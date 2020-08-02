@@ -21,7 +21,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Libraries
 from os import walk
 from time import sleep
-import os, glob, rm, touch
+import os, glob, tofile
 import systemvariables
 
 # Function that prints out all files 1 by 1 virtically without any other characters on the screen
@@ -75,9 +75,7 @@ def show(args):
                         index = i + 1
                         break
                     i += 1
-                file = open(args[index], "a")
-                file.write("\n" + output)
-                file.close()
+                tofile.write(">>", output, args[index])
             elif(">" in args):
                 i = 0
                 index = 0
@@ -89,12 +87,7 @@ def show(args):
                         index = i + 1
                         break
                     i += 1
-                theFakeArgs = [args[index]]
-                if(os.path.exists(args[index]) == True):
-                    rm.remove(theFakeArgs)
-                file = open(args[index], "w")
-                file.write(output)
-                file.close()
+                tofile.write(">", output, args[index])
             # If we don't want to send output of command to a file, print the output to the screen.
             else:
                 print(output)
@@ -130,20 +123,9 @@ def show(args):
                 output = output + hold[j] + "\n"
             j += 1
         if(">>" in args):
-            i = 0
-            index = 1
-            file = open(args[index], "a")
-            file.write("\n" + output)
-            file.close()
+            tofile.write(">>", output, args[1])
         elif(">" in args):
-            i = 0
-            index = 1
-            theFakeArgs = [args[index]]
-            if(os.path.exists(args[index]) == True):
-                rm.remove(theFakeArgs)
-            file = open(args[index], "w")
-            file.write(output)
-            file.close()
+            tofile.write(">", output, args[1])
         else:
             print(output)
         

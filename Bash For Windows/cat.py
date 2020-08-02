@@ -18,7 +18,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Cat is a basic script to show the contents of a file
 
 # Libraries
-import os, touch, rm
+import os, touch, rm, tofile
 
 # Main Function. First check if the file exists
 def show(args):
@@ -49,11 +49,7 @@ def show(args):
                     index = i + 1
                     break
                 i += 1
-            giveTouch = [args[index]]
-            touch.write(giveTouch)
-            file = open(args[index], "a")
-            file.write(output)
-            file.close()
+            tofile.write(">>", output, args[index])
         elif(">" in args):
             if(flag == 0):
                 i = 0
@@ -66,11 +62,7 @@ def show(args):
                         index = i + 1
                         break
                     i += 1
-                giveTouch = [args[index]]
-                touch.write(giveTouch)
-                fileWrite = open(args[index], "w")
-                fileWrite.write(output)
-                fileWrite.close()
+                tofile.write(">", output, args[index])
         else:
             # If not told to send output to a file, print to screen.
             print(output)
