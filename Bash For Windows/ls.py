@@ -32,8 +32,8 @@ def show(args):
     # If we don't request to list the current directory and don't want to send output of current
     # directory to file, do the following:
     if((args[0] != "") and ((args[0] != ">") and (args[0] != ">>"))):
-        # Make sure the directory requested exists
-        if(os.path.exists(args[0]) == True):
+        # Make sure the directory requested exists and that it is a directory
+        if((os.path.exists(args[0]) == True) and (os.path.isdir(args[0]) == True)):
             # Remember what directory we are currently in then change to the requested directory.
             lastDir = os.getcwd()
             os.chdir(args[0])
@@ -92,8 +92,11 @@ def show(args):
             else:
                 print(output)
         else:
-            # Error Message
-            print("ls: cannot access '" + args[0] + "': No such file or directory")
+            # Error Message: if it is a file repeat file name
+            if(os.path.isfile(args[0]) == True):
+                print(args[0])
+            else:
+                print("ls: cannot access '" + args[0] + "': No such file or directory")
 
     # Either print listing of current directory or send output of command to file.
     # Pretty much the same as before.
