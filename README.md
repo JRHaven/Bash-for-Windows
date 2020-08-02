@@ -6,13 +6,15 @@ that isn't compatible with WSL or for people that don't want to use WSL.
 ## Installation
 In the GitHub Page, go to the Releases tab and download the latest zip of the install files. Unzip that file
 and run the Setup.exe file. There is also a Readme file in that zip file which will help guide you through the
-Installation process. I will be making a video over all of Bash for Windows on
-my YouTube Channel soon.
+Installation process.
 
 ## Uninstallation
 Bash for Windows does not leave anything in the Windows Registry or deep in the file system. To remove Bash
 for Windows from your system, simply remove the Bash for Windows folder that you chose to install Bash for
 Windows into, and it will be off your system.
+
+## Introduction to Bash for Windows Video
+[![Bash for Windows YouTube Video](https://img.youtube.com/vi/W6VvRzexrSo/0.jpg)](https://www.youtube.com/watch?v=W6VvRzexrSo)
 
 # Licensing
 Bash for Windows, along with all my other code, is under the MIT License.
