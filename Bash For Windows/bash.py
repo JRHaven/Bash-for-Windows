@@ -194,11 +194,11 @@ def run():
             popd.go()
         elif(command == "uname"):
             if(argsArr[0] == "-g"):
-                print("Bash for Windows: The Bourne Again Shell! Version 1.0")
+                print("Bash for Windows: The Bourne Again Shell! Version 1.2")
                 print("Taking you to the GitHub page...")
                 os.system("iexplore https://github.com/JR-Tech-and-Software/Bash-for-Windows")
             else:
-                print("Bash for Windows: The Bourne Again Shell! Version 1.0")
+                print("Bash for Windows: The Bourne Again Shell! Version 1.2")
                 print("\nAll the code is avalible at GitHub! Check it out! Use the -g argument")
                 print("to be taken to the page!\n\nBash for Windows is under the MIT License.")
                 print("Check it out on GitHub as well.")
