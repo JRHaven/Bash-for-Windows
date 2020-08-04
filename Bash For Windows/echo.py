@@ -15,10 +15,10 @@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVE
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
-# echo is a basic script the either echos text given or outputs a variable
+# echo is a basic script the either echos text given or endstrings a variable
 
-# Import the system variables (to output if asked to)
-import systemvariables
+# Import the system variables (to endstring if asked to)
+import systemvariables, tofile
 
 # Main Function. Commented lines are for debugging purposes only. First set a couple of variables
 def reg(args):
@@ -40,6 +40,8 @@ def reg(args):
     # inputted text
 
     for j in args:
+        if((args[i] == ">") or (args[i] == ">>")):
+            break
         if(ifvar == True):
             newstr = stringprt[1:]
             #print(newstr)
@@ -111,4 +113,33 @@ def reg(args):
             else:
                 endstring = args[i]
         i += 1
-    print(endstring)
+    flag = 0
+    if(">>" in args):
+        i = 0
+        index = 0
+        flag = 1
+        for k in args:
+            if(i == 0):
+                i += 1
+                continue
+            if(args[i] == ">>"):
+                index = i + 1
+                break
+            i += 1
+        tofile.write(">>", endstring, args[index])
+    elif(">" in args):
+        if(flag == 0):
+            i = 0
+            index = 0
+            for k in args:
+                if(i == 0):
+                    i += 1
+                    continue
+                if(args[i] == ">"):
+                    index = i + 1
+                    break
+                i += 1
+            tofile.write(">", endstring, args[index])
+    else:
+        # If not told to send endstring to a file, print to screen.
+        print(endstring)

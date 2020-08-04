@@ -21,7 +21,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from time import sleep
 import os, username, ls, cd, systemvariables, pwd, socket, cat
 import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
-import mv, oschk, repair
+import mv, oschk, repair, tofile, webbrowser
 
 # Main function. First Set all other system variables
 def run():
@@ -145,7 +145,16 @@ def run():
         elif(command == "cd"):
             cd.go(argsArr)
         elif(command == "pwd"):
-            print(os.getcwd())
+            out = os.getcwd()
+            flag = 0
+            if(">>" in argsArr):
+                flag = 1
+                tofile.write(">>", out, argsArr[1])
+            elif(">" in argsArr):
+                if(flag == 0):
+                    tofile.write(">", out, argsArr[1])
+            else:
+                print(out)
         elif(command == "cat"):
             cat.show(argsArr)
         elif(command == "nano"):
@@ -163,14 +172,13 @@ def run():
         elif(command == "clear"):
             os.system("cls")
         elif(command == "lsvar"):
-            ls.vars()
+            ls.vars(argsArr)
         elif(command == "echo"):
             echo.reg(argsArr)
         elif(command == "touch"):
             touch.write(argsArr)
         elif(command == "rm"):
-            rem = argsArr
-            rm.remove(rem)
+            rm.remove(argsArr)
         elif(command == "mv"):
             file = argsArr[0]
             dstfile = argsArr[1]
