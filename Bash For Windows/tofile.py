@@ -14,23 +14,18 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE 
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
 '''
-
-import touch
-
 def write(type, contents, filename):
     # If told to append, append given text to file.
     if(type == ">>"):
-        giveTouch = [contents]
-        touch.write(giveTouch)
         file = open(filename, "a")
-        file.write(contents)
+        file.write("\n" + contents)
         file.close()
-    
+
+
     # If told to overwrite, overwrite a file and put given text in file.
     elif(type == ">"):
-        giveTouch = [filename]
-        touch.write(giveTouch)
         fileWrite = open(filename, "w")
         fileWrite.write(contents)
         fileWrite.close()
