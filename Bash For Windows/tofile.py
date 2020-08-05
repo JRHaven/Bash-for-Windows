@@ -16,16 +16,67 @@ FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TOR
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 '''
-def write(type, contents, filename):
-    # If told to append, append given text to file.
-    if(type == ">>"):
-        file = open(filename, "a")
-        file.write("\n" + contents)
-        file.close()
-
-
-    # If told to overwrite, overwrite a file and put given text in file.
-    elif(type == ">"):
-        fileWrite = open(filename, "w")
-        fileWrite.write(contents)
-        fileWrite.close()
+def write(args, contents):
+    arrlen = len(args) - 1
+    if(args[0] == ">"):
+        if(1 > arrlen):
+            print("bash: syntax error near unexpected token `newline'")
+        else:
+            # If told to overwrite, overwrite a file and put given text in file.
+            fileWrite = open(args[1], "w")
+            fileWrite.write(contents)
+            fileWrite.close()
+    elif(args[0] == ">>"):
+        if(1 > arrlen):
+            print("bash: syntax error near unexpected token `newline'")
+        else:
+            # If told to append, append given text to file.
+            file = open(args[1], "a")
+            file.write("\n" + contents)
+            file.close()
+    else:
+        flag = 0
+        if(">>" in args):
+            i = 0
+            index = 0
+            flag = 1
+            for j in args:
+                if(i == 0):
+                    i += 1
+                    continue
+                if(args[i] == ">>"):
+                    index = i + 1
+                    break
+                i += 1
+            
+            # Make sure the information exists
+            if(index > arrlen):
+                print("bash: syntax error near unexpected token `newline'")
+            else:
+                # If told to append, append given text to file.
+                file = open(args[index], "a")
+                file.write("\n" + contents)
+                file.close()
+        elif(">" in args):
+            if(flag == 0):
+                i = 0
+                index = 0
+                for j in args:
+                    if(i == 0):
+                        i += 1
+                        continue
+                    if(args[i] == ">"):
+                        index = i + 1
+                        break
+                    i += 1
+                # Make sure the information exists
+                if(index > arrlen):
+                    print("bash: syntax error near unexpected token `newline'")
+                else:
+                    # If told to overwrite, overwrite a file and put given text in file.
+                    fileWrite = open(args[index], "w")
+                    fileWrite.write(contents)
+                    fileWrite.close()
+        else:
+            # If not told to send output to a file, print to screen.
+            print(contents)

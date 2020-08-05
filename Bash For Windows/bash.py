@@ -21,7 +21,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from time import sleep
 import os, username, ls, cd, systemvariables, pwd, socket, cat
 import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
-import mv, oschk, repair, tofile
+import mv, oschk, repair, tofile, uname
 
 # Main function. First Set all other system variables
 def run():
@@ -145,16 +145,7 @@ def run():
         elif(command == "cd"):
             cd.go(argsArr)
         elif(command == "pwd"):
-            out = os.getcwd()
-            flag = 0
-            if(">>" in argsArr):
-                flag = 1
-                tofile.write(">>", out, argsArr[1])
-            elif(">" in argsArr):
-                if(flag == 0):
-                    tofile.write(">", out, argsArr[1])
-            else:
-                print(out)
+            tofile.write(argsArr, os.getcwd())
         elif(command == "cat"):
             cat.show(argsArr)
         elif(command == "nano"):
@@ -193,15 +184,7 @@ def run():
         elif(command == "popd"):
             popd.go()
         elif(command == "uname"):
-            if(argsArr[0] == "-g"):
-                print("Bash for Windows: The Bourne Again Shell! Version 1.2")
-                print("Taking you to the GitHub page...")
-                os.system("iexplore https://github.com/JR-Tech-and-Software/Bash-for-Windows")
-            else:
-                print("Bash for Windows: The Bourne Again Shell! Version 1.2")
-                print("\nAll the code is avalible at GitHub! Check it out! Use the -g argument")
-                print("to be taken to the page!\n\nBash for Windows is under the MIT License.")
-                print("Check it out on GitHub as well.")
+            uname.list(argsArr)
         elif(command == "mkdir"):
             mkdir.create(argsArr)
         else:
