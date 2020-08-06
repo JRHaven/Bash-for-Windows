@@ -15,15 +15,15 @@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVE
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
-# Code is used often, so I created a library for it. If the requested file exists, return True. If not, return False
+# Code is used often, so I created a library for it. Don't relly use it anymore, it is only
+# here because I'm lazy and don't want to go through the code to remove the need for the library
 
-# Uses the ls library to get list of all the files in the directory to look through
-import ls
+# Uses the os library to make sure file exists
+import os
 
 # Main function
 def check(filename):
-    directory = ls.list()
-    if(any(filename in s for s in directory)):
+    if(os.path.exists(filename)):
        return True
     else:
        return False

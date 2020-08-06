@@ -28,3 +28,4 @@ def write(args):
         new = open(filename, "w")
         new.write("")
         new.close()
+        i += 1

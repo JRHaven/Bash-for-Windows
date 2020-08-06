@@ -35,7 +35,7 @@ def remove(args):
             args.pop(0)
             for j in args:
                 file = args[i]
-                if(any(file in s for s in directory)):
+                if(os.path.exists(file)):
                     # Make sure it's' a directory
                     if(os.path.isdir(file) == True):
                         if(os.getcwd() == systemvariables.HOME):
@@ -48,7 +48,7 @@ def remove(args):
                         else:
                             shutil.rmtree(file)
                     else:
-                        os.remove(file)
+                        print("rm: cannot remove '" + file + ": No such file or directory")
                 else:
                     print("rm: cannot remove '" + file + ": No such file or directory")
                 i += 1
@@ -56,7 +56,7 @@ def remove(args):
             args.pop(lastIndex)
             for j in args:
                 file = args[i]
-                if(any(file in s for s in directory)):
+                if(os.path.exists(file)):
                     # Make sure it isn't a directory
                     if(os.path.isdir(file) == True):
                         shutil.rmtree(file)
@@ -69,7 +69,7 @@ def remove(args):
         for j in args:
             file = args[i]
             # If it exists, remove it. If not, display a message
-            if(any(file in s for s in directory)):
+            if(os.path.exists(file)):
                 # Make sure it isn't a directory
                 if(os.path.isfile(file) == True):
                     os.remove(file)
