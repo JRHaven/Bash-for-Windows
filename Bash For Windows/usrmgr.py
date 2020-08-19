@@ -28,6 +28,26 @@ import systemvariables, oschk, touch, nano
 # Clear the screen to get rid of the messages from the imported libraries
 os.system("cls")
 
+def autoRun(autorun):
+    commands = [""]
+    i = 0
+    j = 0
+    k = 0
+    for i in autorun:
+        # If we come across a ;, add an item to the array and skip the rest
+        if(i == ";"):
+            k += 1
+            commands.append("")
+            continue
+
+        # Take the character and put it in the appropriate spot in the array.
+        commands[k] = commands[k] + i
+    i = 0
+    j = 0
+    for i in commands:
+        bash.runcmd(commands[j])
+        j += 1
+
 # Login Prompt
 def logon():
     # Check again to make sure we are running Windows
@@ -62,7 +82,7 @@ def logon():
     password.close()
     print("Welcome to Bash(the Bourne Again Shell) for Windows!")
 
-    # Check for autorun.bws file
+    # Check for autorun.bws file, and call a function to take care of the rest
     if(os.path.exists("Settings/autorun.bws") == False):
         if(os.path.exists("Settings/noauto.bws") == False):
             autorun = input("Bash for Windows cannot find a autorun.bws file. Create one? (Y,n) ")
@@ -74,7 +94,13 @@ def logon():
                 edit = input("Would you like to modify the autorun.bws file? (Y,n) ")
                 if((edit != "n") and (edit != "N")):
                     nano.write(["Settings/autorun.bws"])
-
+                    file = open("Settings/autorun.bws", "r")
+                    autoRun(str(file.read()))
+                    file.close()
+    else:
+        file = open("Settings/autorun.bws", "r")
+        autoRun(str(file.read()))
+        file.close()
 
     user.close()
     bash.run()
