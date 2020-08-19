@@ -23,7 +23,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 import os
 import repair
 import bash, platform
-import systemvariables, oschk
+import systemvariables, oschk, touch, nano
 
 # Clear the screen to get rid of the messages from the imported libraries
 os.system("cls")
@@ -61,6 +61,21 @@ def logon():
             print("Incorrect Password.")
     password.close()
     print("Welcome to Bash(the Bourne Again Shell) for Windows!")
+
+    # Check for autorun.bws file
+    if(os.path.exists("Settings/autorun.bws") == False):
+        if(os.path.exists("Settings/noauto.bws") == False):
+            autorun = input("Bash for Windows cannot find a autorun.bws file. Create one? (Y,n) ")
+            if((autorun == "n") or (autorun == "N")):
+                touch.write(["Settings/noauto.bws"])
+            else:
+                touch.write(["Settings/autorun.bws"])
+                print("autorun.bws file has been placed inside of the Bash/Bash/Settings folder.")
+                edit = input("Would you like to modify the autorun.bws file? (Y,n) ")
+                if((edit != "n") and (edit != "N")):
+                    nano.write(["Settings/autorun.bws"])
+
+
     user.close()
     bash.run()
     
