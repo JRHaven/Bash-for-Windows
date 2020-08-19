@@ -21,7 +21,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from time import sleep
 import os, username, ls, cd, systemvariables, pwd, socket, cat
 import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
-import mv, oschk, repair, tofile, uname
+import mv, oschk, repair, tofile, uname, date
 
 def runcmd(command):
     # Find a space. If one is found, put it in another variable.
@@ -118,6 +118,8 @@ def runcmd(command):
         uname.list(argsArr)
     elif(command == "mkdir"):
         mkdir.create(argsArr)
+    elif(command == "date"):
+        date.show(argsArr)
     else:
         if(command == ""):
             sleep(0)
