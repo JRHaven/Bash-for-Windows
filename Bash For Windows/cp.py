@@ -25,6 +25,11 @@ import os
 def copy(argsArr):
     srcfile = argsArr[0]
     dstfile = argsArr[1]
+    if((dstfile == "..") or (dstfile == "../")):
+        dstfile = "../" + srcfile
+    if(os.path.isdir(dstfile) == True):
+        cmdstfile = dstfile
+        dstfile = cmdstfile + "/" + srcfile
     if(filechk.check(srcfile) == True):
         cmd = "copy " + srcfile  + " " + dstfile
         os.system(str(cmd))

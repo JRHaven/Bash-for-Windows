@@ -27,6 +27,11 @@ def move(file, dstfile):
     holder = ""
     i = 0
     j = 0
+    if((dstfile == "..") or (dstfile == "../")):
+        dstfile = "../" + file
+    if(os.path.isdir(dstfile) == True):
+        cmdstfile = dstfile
+        dstfile = cmdstfile + "/" + file
     if(dstfile.find("/") != -1):
         for i in dstfile:
             if(dstfile[j] == "/"):
