@@ -23,6 +23,61 @@ import os, username, ls, cd, systemvariables, pwd, socket, cat
 import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
 import mv, oschk, repair, tofile, uname
 
+def runcmd(command, argsArr):
+    if(command == "exit"):
+        exit(0)
+    elif(command == "ls"):
+        ls.show(argsArr)
+    elif(command == "cd"):
+        cd.go(argsArr)
+    elif(command == "pwd"):
+        tofile.write(argsArr, os.getcwd())
+    elif(command == "cat"):
+        cat.show(argsArr)
+    elif(command == "nano"):
+        file = argsArr
+        nano.write(file) 
+    elif(command == "vi"):
+        file = argsArr
+        nano.write(file) 
+    elif(command == "vim"):
+        file = argsArr
+        nano.write(file) 
+    elif(command == "emacs"):
+        file = argsArr
+        nano.write(file) 
+    elif(command == "clear"):
+        os.system("cls")
+    elif(command == "lsvar"):
+        ls.vars(argsArr)
+    elif(command == "echo"):
+        echo.reg(argsArr)
+    elif(command == "touch"):
+        touch.write(argsArr)
+    elif(command == "rm"):
+        rm.remove(argsArr)
+    elif(command == "mv"):
+        file = argsArr[0]
+        dstfile = argsArr[1]
+        mv.move(file, dstfile)
+    elif(command == "cp"):
+        cp.copy(argsArr)
+    elif(command == "pushd"):
+        path = argsArr
+        pushd.go(path)
+    elif(command == "popd"):
+        popd.go()
+    elif(command == "uname"):
+        uname.list(argsArr)
+    elif(command == "mkdir"):
+        mkdir.create(argsArr)
+    else:
+        if(command == ""):
+            sleep(0)
+        else:
+            print(command + ": command not found")
+
+
 # Main function. First Set all other system variables
 def run():
     # Check once again to make sure we are running Windows
@@ -59,8 +114,6 @@ def run():
     systemvariables.usrpath = os.getcwd()
     os.chdir("..")
     systemvariables.bshpath = os.getcwd()
-
-    zzz = 1
     
     # Get user name
     cd.go("/")
@@ -77,7 +130,7 @@ def run():
     # If the user has used Ctrl + C, quit without crashing
     try:
         # Do this until told to exit
-        while(zzz == 1):
+        while(True):
             # Change display depending on where the user is in the file system
             if(os.getcwd() == systemvariables.ROOT):
                 display = "/"
@@ -152,59 +205,7 @@ def run():
                 command = command[:-1:]
             
             # Run the command. If it dosen't exist, display a message
-            if(command == "exit"):
-                zzz = 0
-            elif(command == "ls"):
-                ls.show(argsArr)
-            elif(command == "cd"):
-                cd.go(argsArr)
-            elif(command == "pwd"):
-                tofile.write(argsArr, os.getcwd())
-            elif(command == "cat"):
-                cat.show(argsArr)
-            elif(command == "nano"):
-                file = argsArr
-                nano.write(file) 
-            elif(command == "vi"):
-                file = argsArr
-                nano.write(file) 
-            elif(command == "vim"):
-                file = argsArr
-                nano.write(file) 
-            elif(command == "emacs"):
-                file = argsArr
-                nano.write(file) 
-            elif(command == "clear"):
-                os.system("cls")
-            elif(command == "lsvar"):
-                ls.vars(argsArr)
-            elif(command == "echo"):
-                echo.reg(argsArr)
-            elif(command == "touch"):
-                touch.write(argsArr)
-            elif(command == "rm"):
-                rm.remove(argsArr)
-            elif(command == "mv"):
-                file = argsArr[0]
-                dstfile = argsArr[1]
-                mv.move(file, dstfile)
-            elif(command == "cp"):
-                cp.copy(argsArr)
-            elif(command == "pushd"):
-                path = argsArr
-                pushd.go(path)
-            elif(command == "popd"):
-                popd.go()
-            elif(command == "uname"):
-                uname.list(argsArr)
-            elif(command == "mkdir"):
-                mkdir.create(argsArr)
-            else:
-                if(command == ""):
-                    sleep(0)
-                else:
-                    print(command + ": command not found")
-        exit()
+            runcmd(command, argsArr)
     except KeyboardInterrupt:
         # If the program gets a interrupt, exit without crashing
         exit()
