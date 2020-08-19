@@ -23,7 +23,54 @@ import os, username, ls, cd, systemvariables, pwd, socket, cat
 import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
 import mv, oschk, repair, tofile, uname
 
-def runcmd(command, argsArr):
+def runcmd(command):
+    # Find a space. If one is found, put it in another variable.
+    args = command.find(" ", 0, len(command))
+    argsArr = ['']
+
+    # Counters
+    i = 0
+    j = 0
+    k = 0
+    flag = 0
+    flag2 = 0
+
+    # Only do it if there is indeed a space
+    if(args != -1):
+        for i in command:
+            # Only do this after a space
+            if(j > args):
+
+                # If the character is \, set a flag and remove the \. If not, turn off the flag
+                if(i == "\\"):
+                    flag = 1
+                    if(i == "\\"):
+                        continue
+                    
+                # If we come across a space, add an item to the array of arguments and skip the rest,
+                # unless the flag set before is set
+                if((i == " ") and (flag == 0)):
+                    k += 1
+                    argsArr.append("")
+                    continue
+                elif((i == " " and (flag == 1))):
+                    flag = 0
+
+                # Take the current item in the args array and put in each character of the input
+                # string, then delete that same character from the input string
+                argsArr[k] = argsArr[k] + i
+                command = command[0 : j : ]
+            else:
+                j += 1
+    # Reset the counters
+    i = 0
+    j = 0
+    k = 0
+
+    # If we have at least 1 space, make sure you take out the last character
+    # in the command variable that happens to be a space
+    if(args != -1):
+        command = command[:-1:]
     if(command == "exit"):
         exit(0)
     elif(command == "ls"):
@@ -156,56 +203,8 @@ def run():
             # Prompt
             command = input(usr + "@" + socket.gethostname() + ":" + display + " $ ")
 
-            # Find a space. If one is found, put it in another variable.
-            args = command.find(" ", 0, len(command))
-            argsArr = ['']
-
-            # Counters
-            i = 0
-            j = 0
-            k = 0
-            flag = 0
-            flag2 = 0
-
-            # Only do it if there is indeed a space
-            if(args != -1):
-                for i in command:
-                    # Only do this after a space
-                    if(j > args):
-
-                        # If the character is \, set a flag and remove the \. If not, turn off the flag
-                        if(i == "\\"):
-                            flag = 1
-                            if(i == "\\"):
-                                continue
-                            
-                        # If we come across a space, add an item to the array of arguments and skip the rest,
-                        # unless the flag set before is set
-                        if((i == " ") and (flag == 0)):
-                            k += 1
-                            argsArr.append("")
-                            continue
-                        elif((i == " " and (flag == 1))):
-                            flag = 0
-
-                        # Take the current item in the args array and put in each character of the input
-                        # string, then delete that same character from the input string
-                        argsArr[k] = argsArr[k] + i
-                        command = command[0 : j : ]
-                    else:
-                        j += 1
-            # Reset the counters
-            i = 0
-            j = 0
-            k = 0
-
-            # If we have at least 1 space, make sure you take out the last character
-            # in the command variable that happens to be a space
-            if(args != -1):
-                command = command[:-1:]
-            
-            # Run the command. If it dosen't exist, display a message
-            runcmd(command, argsArr)
+            # Run the command using the function above.
+            runcmd(command)
     except KeyboardInterrupt:
         # If the program gets a interrupt, exit without crashing
         exit()
