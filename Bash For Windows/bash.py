@@ -21,7 +21,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from time import sleep
 import os, username, ls, cd, systemvariables, pwd, socket, cat
 import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
-import mv, oschk, repair, tofile, uname, date
+import mv, oschk, repair, tofile, uname, date, script
 
 def runcmd(command):
     # Find a space. If one is found, put it in another variable.
@@ -121,8 +121,19 @@ def runcmd(command):
     elif(command == "date"):
         date.show(argsArr)
     else:
+        dirContents = ls.list()
         if(command == ""):
             sleep(0)
+        elif(command in dirContents):
+            if(".bwsh" in command):
+                if(os.path.exists(command) == True):
+                    scriptContents = open(command, "r")
+                    script.run(str(scriptContents.read()))
+                    scriptContents.close()
+                else:
+                    print(command + ": command not found")
+            else:
+                print(command + ": command not found")
         else:
             print(command + ": command not found")
 
