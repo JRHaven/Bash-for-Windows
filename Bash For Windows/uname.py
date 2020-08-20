@@ -40,11 +40,11 @@ def list(args):
     elif((args[0] == "-o") or (args[0] == "--operating-system")):
         output = output + platform.system()
     elif((args[0] == "-i") or (args[0] == "--information") or (args[0] == "--version")):
-        output = output + "Bash for Windows: The Bourne Again Shell! Version 2.0 [IN DEVELOPMENT]\n\nAll\
+        output = output + "Bash for Windows: The Bourne Again Shell! Version 2.0\n\nAll\
  the code is avalible at GitHub! Check it out! Use the -g argument to be taken to the page!\
 \n\nBash for Windows is under the MIT License. Check it out on GitHub as well."
     elif((args[0] == "-g") or (args[0] == "--github")):
-        output = output + "Bash for Windows: The Bourne Again Shell! Version 2.0 [IN DEVELOPMENT]\nTaking you to the GitHub page...\n"
+        output = output + "Bash for Windows: The Bourne Again Shell! Version 2.0\nTaking you to the GitHub page...\n"
         os.system("iexplore https://github.com/JR-Tech-and-Software/Bash-for-Windows")
     elif(args[0] == "--help"):
         output = output + "Bash for Windows: The Bourne Again Shell!\nuname updated for version 1.3\
