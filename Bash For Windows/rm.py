@@ -25,10 +25,42 @@ import systemvariables
 
 # Main Function. First get a listing of the directory from the ls script
 def remove(args):
-    directory = ls.list()
     i = 0
-    m = 0
-    n = 0
+
+    # Check for Wildcards
+    wildCard = False
+    wildIndex = []
+    for j in args:
+        if("*" in args[i]):
+            wildCard = True
+            wildIndex.append(i)
+        i += 1
+    
+    # Figure out if the wildcard has a dot, if it is before dot, or after dot
+    if(wildCard == True):
+        dot = -1
+        flag = 0
+        k = 0
+        l = 0
+        m = 0
+        i = 0
+        for i in wildIndex:
+            for j in args[i]:
+                if(j == "*"):
+                    l = k
+                if(j == "."):
+                    flag = 1
+                    m = k
+                k += 1
+        if(flag == 0):
+            dot = -1
+        elif(l > m):
+            dot = 1
+        elif(l < m):
+            dot = 0
+                
+    # Reset Variable
+    i = 0
     if("-r" in args):
         lastIndex = len(args) - 1
         if(args[0] == "-r"):
@@ -75,6 +107,59 @@ def remove(args):
                     os.remove(file)
                 else:
                     print("rm: cannot remove '" + file + ": Is a directory")
+            
+            # If we found a wildcard before, do the following depending on where the dot is
+            elif(wildCard == True):
+                if(dot == -1):
+                    # Remove all files in the directory
+                    dirList = ls.list()
+                    n = ""
+                    for n in dirList:
+                        if(os.path.isdir(n) == True):
+                            print("rm: cannot remove '" + n + ": Is a directory")
+                        else:
+                            os.remove(n)
+                elif(dot == 0):
+                    # Remove all files with the extension we asked for
+                    k = 0
+                    flag = 0
+                    ext = ""
+                    n = ""
+                    for n in args[k]:
+                        if(k == l):
+                            flag = 1
+                            k += 1
+                            continue
+                        if(flag == 1):
+                            ext = ext + n
+                        k += 1
+                    k = 0
+                    n = ""
+                    dirList = ls.list()
+                    for n in dirList:
+                        if(ext in n):
+                            if(os.path.isdir(n) == True):
+                                print("rm: cannot remove '" + n + ": Is a directory")
+                            else:
+                                os.remove(n)
+                else:
+                    # Remove all files with the filename we asked for
+                    n = ""
+                    k = 0
+                    name = ""
+                    for n in args[i]:
+                        if(n == "."):
+                            name = name + n
+                            break
+                        name = name + n
+                    dirList = ls.list()
+                    n = ""
+                    for n in dirList:
+                        if(name in n):
+                            if(os.path.isdir(n) == True):
+                                print("rm: cannot remove '" + n + ": Is a directory")
+                            else:
+                                os.remove(n)
             else:
                 print("rm: cannot remove '" + file + ": No such file or directory")
             i += 1

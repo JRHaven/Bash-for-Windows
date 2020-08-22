@@ -54,12 +54,15 @@ os.chdir("../..")
 #print(os.getcwd())
 
 # See if any folders are deleted and if they are attempt to fix it using the repair script
-if(os.path.exists("Bash/Users") == False):
-    choice = input("Unfortunatly, Bash for Windows could not find your data. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
-    if((choice == "y") or (choice == "Y")):
-        repair.baseusrrepair()
-    else:
-        print("Abort.")
+try:
+    if(os.path.exists("Bash/Users") == False):
+        choice = input("Unfortunatly, Bash for Windows could not find your data. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
+        if((choice == "y") or (choice == "Y")):
+            repair.baseusrrepair()
+        else:
+            print("Abort.")
+except KeyboardInterrupt:
+    exit(0)
 
 # Do the following if the username doesn't exist.
 if(os.path.exists("Bash/Bash/Settings/ivhzadgz.bws") == False):
@@ -79,27 +82,33 @@ else:
     usrname = open("Bash/Bash/Settings/ivhzadgz.bws")
 
 # Do the following if the password doesn't exist
-if(os.path.exists("Bash/Bash/Settings/kvnnadgz.bws") == False):
-    print("Unfortunatly, Bash for Windows cannot find your user settings.")
-    choice = input("Do you want to try to fix this problem? [Y,n] ")
-    if((choice == "y") or (choice == "Y")):
-        username.get()
-        os.chdir("../..")
+try:
+    if(os.path.exists("Bash/Bash/Settings/kvnnadgz.bws") == False):
+        print("Unfortunatly, Bash for Windows cannot find your user settings.")
+        choice = input("Do you want to try to fix this problem? [Y,n] ")
+        if((choice == "y") or (choice == "Y")):
+            username.get()
+            os.chdir("../..")
+        else:
+            print("Abort. Expect the enviornment to be unstable.")
     else:
-        print("Abort. Expect the enviornment to be unstable.")
-else:
-    usrname = open("Bash/Bash/Settings/kvnnadgz.bws")
+        usrname = open("Bash/Bash/Settings/kvnnadgz.bws")
+except KeyboardInterrupt:
+    exit(0)
 
 # Go back to here so that we don't trigger an unneeded repair
 os.chdir(systemvariables.settingspath + "/../..")
 
 # Check if the user folder was deleted
-if(os.path.exists("Bash/Users/" + usrname.read()) == False):
-    choice = input("Unfortunatly, Bash for Windows could not find your data. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
-    if((choice == "y") or (choice == "Y")):
-        repair.baseusrfilerepair()
-    else:
-        print("Abort.")
+try:
+    if(os.path.exists("Bash/Users/" + usrname.read()) == False):
+        choice = input("Unfortunatly, Bash for Windows could not find your data. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
+        if((choice == "y") or (choice == "Y")):
+            repair.baseusrfilerepair()
+        else:
+            print("Abort.")
+except KeyboardInterrupt:
+    exit(0)
 
 # We don't need this file to stay open
 usrname.close()
@@ -108,7 +117,13 @@ usrname.close()
 os.chdir(systemvariables.settingspath + "/../..")
 
 # Tell the login prompt what folder we are in
-usrmgr2.usrcheck(os.getcwd())
+try:
+    usrmgr2.usrcheck(os.getcwd())
+except KeyboardInterrupt:
+    exit(0)
 
 # Call the login prompt
-usrmgr.logon()
+try:
+    usrmgr.logon()
+except KeyboardInterrupt:
+    exit(0)

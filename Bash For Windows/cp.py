@@ -23,15 +23,21 @@ import os
 
 # Main Function. First checks if the file wanted exists
 def copy(argsArr):
-    srcfile = argsArr[0]
-    dstfile = argsArr[1]
-    if((dstfile == "..") or (dstfile == "../")):
-        dstfile = "../" + srcfile
-    if(os.path.isdir(dstfile) == True):
-        cmdstfile = dstfile
-        dstfile = cmdstfile + "/" + srcfile
-    if(filechk.check(srcfile) == True):
-        cmd = "copy " + srcfile  + " " + dstfile
-        os.system(str(cmd))
+    length = len(argsArr) - 1
+    if(argsArr[0] == ""):
+        print("cp: missing file operand")
+    elif(length < 1):
+        print("cp: missing file operand after '" + argsArr[0] + "'")
     else:
-        print("cp: The file", srcfile, "does not exist so not copying!")
+        srcfile = argsArr[0]
+        dstfile = argsArr[1]
+        if((dstfile == "..") or (dstfile == "../")):
+            dstfile = "../" + srcfile
+        if(os.path.isdir(dstfile) == True):
+            cmdstfile = dstfile
+            dstfile = cmdstfile + "/" + srcfile
+        if(filechk.check(srcfile) == True):
+            cmd = "copy " + srcfile  + " " + dstfile
+            os.system(str(cmd))
+        else:
+            print("cp: cannot stat '" + srcfile + "': No such file or directory")
