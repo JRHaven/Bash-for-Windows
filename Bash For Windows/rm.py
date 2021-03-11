@@ -70,7 +70,7 @@ def remove(args):
                 if(os.path.exists(file)):
                     # Make sure it's' a directory
                     if(os.path.isdir(file) == True):
-                        if(os.getcwd() == systemvariables.HOME):
+                        if(os.getcwd() == systemvariables.read("HOME")):
                             if(file == "Documents"):
                                 force = input("rm: remove write-protected directory '" + file + "'? ")
                                 if((force == "y") or (force == "Y")):

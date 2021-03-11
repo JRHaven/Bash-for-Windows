@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2021 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -22,7 +22,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Libraries
 import os
 import repair
-import bash, platform
+import bash, platform, time
 import systemvariables, oschk, touch, nano
 
 # Clear the screen to get rid of the messages from the imported libraries
@@ -53,7 +53,7 @@ def logon():
     # Check again to make sure we are running Windows
     oschk.check()
 
-    os.chdir(systemvariables.exepath)
+    os.chdir(systemvariables.read("exepath"))
     os.chdir("../../")
     incorrect = True
     while(incorrect == True):
@@ -66,17 +66,17 @@ def logon():
     incorrect = True
 
     # Check double check to make sure we are running Windows
-    #if(platform.system() != "Windows"):
-    #    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-    #    os.system("bash")
-    #    exit()
+    if(platform.system() != "Windows"):
+        print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
+        os.system("bash")
+        exit()
     
     while(incorrect == True):
         password = open("Settings/kvnnadgz.bws", "r")
         passguess = input("password # ")
         if(passguess == password.read()):
             incorrect = False
-            systemvariables.usrsession = userguess
+            systemvariables.init("usrsession", userguess)
         else:
             print("Incorrect Password.")
     password.close()
@@ -107,7 +107,11 @@ def logon():
     
 # Function for checking a password based on username provided
 def checkpassword():
-    session = systemvariables.usrsession
+    if(systemvariables.lookupIndex("usrsession") == -1):
+        print("ERROR: Bash for Windows has ran into a critical error and must shutdown.\nError: USRSESSION_VAR_UNDEFINED")
+        time.sleep(3)
+        exit(1)
+    session = systemvariables.read("usrsession")
     user = ""
     incorrect = True
     if(os.path.exists("Settings/ivhzadgzzoneth.bws") == True):

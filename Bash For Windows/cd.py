@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2021 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -26,47 +26,50 @@ currentdir = ""
 
 # Main Function
 def go(args):
-    path = args[0]
+    path = str(args[0])
     currentdir = os.getcwd()
-    otherdir = systemvariables.lastdir
+    otherdir = systemvariables.read("lastdir")
     
     # If we have inputed something special, go to a special place.
     # If not, go to where directed.
     if(path == "~"):
-        os.chdir(systemvariables.HOME)
+        os.chdir(systemvariables.read("HOME"))
     elif(path == "-"):
-        os.chdir(systemvariables.lastdir)
+        if(systemvariables.read("lastdir") == ""):
+            print("bash: cd: $lastdir not set")
+        else:
+            os.chdir(systemvariables.read("lastdir"))
     elif(path == "/"):
-        os.chdir(systemvariables.ROOT)
+        os.chdir(systemvariables.read("ROOT"))
     elif(path == "$settingspath"):
-        os.chdir(systemvariables.settingspath)
+        os.chdir(systemvariables.read("settingspath"))
     elif(path == "$exepath"):
-        os.chdir(systemvariables.exepath)
+        os.chdir(systemvariables.read("exepath"))
     elif(path == "/Bash"):
-        os.chdir(systemvariables.bshpath)
+        os.chdir(systemvariables.read("bshpath"))
     elif(path == "/Bash/Bash"):
-        os.chdir(systemvariables.settingspath)
+        os.chdir(systemvariables.read("settingspath"))
     elif(path == "/Bash/Users"):
-        os.chdir(systemvariables.usrpath)
+        os.chdir(systemvariables.read("usrpath"))
     elif(path == "/Bash/Bash/Settings"):
-        os.chdir(systemvariables.loginfopath)
+        os.chdir(systemvariables.read("loginfopath"))
     elif(path == "/Bash/Bash/Source"):
-        os.chdir(systemvariables.srcpath)
+        os.chdir(systemvariables.read("srcpath"))
     elif(path == "/Bash/Bash/Source/Include"):
-        os.chdir(systemvariables.exepath)
+        os.chdir(systemvariables.read("exepath"))
     elif(path == "$bshpath"):
-        os.chdir(systemvariables.bshpath)
+        os.chdir(systemvariables.read("bshpath"))
     elif(path == "$usrpath"):
-        os.chdir(systemvariables.usrpath)
+        os.chdir(systemvariables.read("usrpath"))
     elif(path == "$loginfopath"):
-        os.chdir(systemvariables.loginfopath)
+        os.chdir(systemvariables.read("loginfopath"))
     elif(path == "$srcpath"):
-        os.chdir(systemvariables.srcpath)
+        os.chdir(systemvariables.read("srcpath"))
     elif(path == "$USRDOCS"):
-        if(systemvariables.USRDOCS == "null"):
+        if(systemvariables.read("USRDOCS") == "null"):
             print("bash: cd: null: No such file or directory")
         else:
-            os.chdir(systemvariables.USRDOCS)
+            os.chdir(systemvariables.read("USRDOCS"))
     else:
         if(path == ""):
             go("~")
@@ -76,7 +79,7 @@ def go(args):
             else:
                 print("bash: cd:", path + ": No such file or directory")
     # Set the lastdir system variable
-    systemvariables.lastdir = currentdir
+    systemvariables.modifyVoid("lastdir", currentdir)
     
-    if(os.getcwd() == systemvariables.lastdir):
-        systemvariables.lastdir = otherdir
+    if(os.getcwd() == systemvariables.read("lastdir")):
+        systemvariables.modify("lastdir", otherdir)

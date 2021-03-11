@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2021 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -27,7 +27,7 @@ import bash
 import os.path
 import username
 import usrmgr
-import usrmgr2
+#import usrmgr2
 import repair
 import systemvariables
 import time
@@ -37,8 +37,8 @@ import time
 #print(os.path.dirname(os.path.realpath(__file__)))
 
 # Set a system variable
-systemvariables.exepath = os.getcwd()
-systemvariables.settingspath = systemvariables.exepath + "/../.."
+systemvariables.init("exepath", os.getcwd())
+systemvariables.init("settingspath", systemvariables.read("exepath") + "/../..")
 
 # Check to make sure we are running on Windows and if not start bash
 if(platform.system() != "Windows"):
@@ -47,12 +47,12 @@ if(platform.system() != "Windows"):
     exit()
     
 # Move to the root of the file structure
-os.chdir(systemvariables.exepath + "/../..")
+os.chdir(systemvariables.read("exepath") + "/../..")
 #print(os.getcwd())
 
 os.chdir("../..")
 #print(os.getcwd())
-
+#print(os.path.exists("Bash/Users"))
 # See if any folders are deleted and if they are attempt to fix it using the repair script
 try:
     if(os.path.exists("Bash/Users") == False):
@@ -97,8 +97,8 @@ except KeyboardInterrupt:
     exit(0)
 
 # Go back to here so that we don't trigger an unneeded repair
-os.chdir(systemvariables.settingspath + "/../..")
-
+os.chdir(systemvariables.read("settingspath") + "/../..")
+#print(os.getcwd())
 # Check if the user folder was deleted
 try:
     if(os.path.exists("Bash/Users/" + usrname.read()) == False):
@@ -114,13 +114,7 @@ except KeyboardInterrupt:
 usrname.close()
 
 # Go back to here so that we don't trigger an unneeded repair
-os.chdir(systemvariables.settingspath + "/../..")
-
-# Tell the login prompt what folder we are in
-try:
-    usrmgr2.usrcheck(os.getcwd())
-except KeyboardInterrupt:
-    exit(0)
+os.chdir(systemvariables.read("settingspath") + "/../..")
 
 # Call the login prompt
 try:

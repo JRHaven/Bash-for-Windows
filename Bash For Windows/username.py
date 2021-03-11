@@ -23,7 +23,7 @@ import systemvariables
 
 # Main Function
 def get():
-    os.chdir(systemvariables.settingspath)
+    os.chdir(systemvariables.read("settingspath"))
     username = input("What do you want your user name to be? # ")
     namefile = open("Settings/ivhzadgz.bws", "w")
     namefile.write(username)

@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019 Jeremiah Haven
+Copyright 2019-2021 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -19,17 +19,40 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # and read depending on what a script may need to do with them. The end user may only see what are in the variables through
 # means of the lsvars and echo commands.
 
-usrsession = "" 
-HOME = ""
-ROOT = ""
-exepath = ""
-USRDOCS = ""
-settingspath = ""
-loginfopath = ""
-srcpath = ""
-usrpath = ""
-bshpath = ""
-lastdir = ""
+# Put any arrays seperately, we cannot handle arrays in the dynamic format of variables.
 directorystack = ["","","","","","","",""]
 
-# If the end user tries to run bash.py without Startup.py, then display this message
+varsNames = []
+varConts = []
+
+def init(name, conts):
+    #print("New Init! Name:", name, "Value:", conts)
+    varsNames.append(name)
+    varConts.append(conts)
+
+def lookupIndex(name):
+    j = 0
+    for i in varsNames:
+        if(i == name):
+            return j
+        j += 1
+    return -1
+
+def read(name):
+    i = lookupIndex(name)
+    if(i == -1):
+        return -1
+    else:
+        return varConts[i]
+
+def modify(name, conts):
+    i = lookupIndex(name)
+    if(i == -1):
+        return -1
+    else:
+        varConts[i] = conts
+        return 0
+
+def modifyVoid(name, conts):
+    if(modify(name, conts) == -1):
+        init(name, conts)

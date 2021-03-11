@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2021 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -75,7 +75,7 @@ def show(args):
                         index = i + 1
                         break
                     i += 1
-                tofile.write(">>", output, args[index])
+                tofile.write(output, args[index])
             elif(">" in args):
                 i = 0
                 index = 0
@@ -87,7 +87,7 @@ def show(args):
                         index = i + 1
                         break
                     i += 1
-                tofile.write(">", output, args[index])
+                tofile.write(output, args[index])
             # If we don't want to send output of command to a file, print the output to the screen.
             else:
                 print(output)
@@ -126,9 +126,9 @@ def show(args):
                 output = output + hold[j] + "\n"
             j += 1
         if(">>" in args):
-            tofile.write(">>", output, args[1])
+            tofile.write(output, args[1])
         elif(">" in args):
-            tofile.write(">", output, args[1])
+            tofile.write(output, args[1])
         else:
             print(output)
         
@@ -141,23 +141,15 @@ def list():
 # variable
 def vars(args):
     output = ""
-    output = output + "usrsession: " + systemvariables.usrsession + "\n"
-    output = output + "HOME: " + systemvariables.HOME + "\n"
-    output = output + "ROOT: " + systemvariables.ROOT + "\n"
-    output = output + "exepath: " + systemvariables.exepath + "\n"
-    output = output + "USRDOCS: " + systemvariables.USRDOCS + "\n"
-    output = output + "settingspath: " + systemvariables.settingspath + "\n"
-    output = output + "loginfopath: " + systemvariables.loginfopath + "\n"
-    output = output + "srcpath: " + systemvariables.srcpath + "\n"
-    output = output + "bshpath: " + systemvariables.bshpath + "\n"
-    output = output + "lastdir: " + systemvariables.lastdir + "\n"
+    for i in systemvariables.varsNames:
+        output = output + i + ": " + str(systemvariables.read(i)) + "\n"
     output = output + "directorystack: " + str(systemvariables.directorystack)
     flag = 0
     if(">>" in args):
         flag = 1
-        tofile.write(">>", output, args[1])
+        tofile.write(output, args[1])
     elif(">" in args):
         if(flag == 0):
-            tofile.write(">", output, args[1])
+            tofile.write(output, args[1])
     else:
         print(output)

@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2021 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -71,6 +71,37 @@ def runcmd(command):
     # in the command variable that happens to be a space
     if(args != -1):
         command = command[:-1:]
+    
+    # If the value set in the system variable "varTrans" is set to true, then replace all
+    # variables with their values. First, make sure it exists.
+    varTrans = systemvariables.read("varTrans")
+    j = 0
+    l = 0
+    i = 0
+    if(varTrans != -1):
+        if(varTrans == 1):
+            for i in argsArr:
+                var = 0
+                varNam = ""
+                k = ""
+                for k in argsArr[j]:
+                    # If this is the first character and it is a $, we are setting up to look
+                    # at a possible variable.
+                    if((l == 0) and (k == "$")):
+                        var = 1
+                        l += 1
+                        continue
+                    if((l >= 0) and (var != 1)):
+                        break
+                    else:
+                        varNam = varNam + k
+                # Check to make sure the variable called for exists. If it does, set this argument
+                # to be the value in the variable.
+                if(systemvariables.read(varNam) != -1):
+                    argsArr[j] = systemvariables.read(varNam)
+                j += 1
+    
+    # Commands
     if(command == "exit"):
         exit(0)
     elif(command == "ls"):
@@ -121,60 +152,126 @@ def runcmd(command):
     elif(command == "date"):
         date.show(argsArr)
     else:
-        dirContents = ls.list()
-        if(command == ""):
-            sleep(0)
-        elif(command in dirContents):
-            if(".bwsh" in command):
-                if(os.path.exists(command) == True):
-                    scriptContents = open(command, "r")
-                    script.run(str(scriptContents.read()))
-                    scriptContents.close()
+        if(argsArr[0] == "="):
+            if(systemvariables.lookupIndex(command) == -1):
+                systemvariables.init(command, argsArr[1])
+            else:
+                systemvariables.modifyVoid(command, argsArr[1])
+        else:
+            dirContents = ls.list()
+            if(command == ""):
+                sleep(0)
+            elif(command in dirContents):
+                if(".bwsh" in command):
+                    if(os.path.exists(command) == True):
+                        scriptContents = open(command, "r")
+                        script.run(str(scriptContents.read()))
+                        scriptContents.close()
+                    else:
+                        print(command + ": command not found")
                 else:
                     print(command + ": command not found")
             else:
                 print(command + ": command not found")
-        else:
-            print(command + ": command not found")
 
 
 # Main function. First Set all other system variables
 def run():
     # Check once again to make sure we are running Windows
     oschk.check()
-    os.chdir(systemvariables.exepath)
+    os.chdir(systemvariables.read("exepath"))
     os.chdir("../../../../")
-    systemvariables.ROOT = os.getcwd()
-    os.chdir("Bash/Users/" + systemvariables.usrsession)
-    systemvariables.HOME = os.getcwd()
+    systemvariables.init("ROOT", os.getcwd())
+    os.chdir("Bash/Users/" + systemvariables.read("usrsession"))
+    systemvariables.init("HOME", os.getcwd())
     if(os.path.exists("Documents") == False):
         print("Unfortunatly, Bash for Windows cannot find your documents.")
         prompt = input("Do you want to try to repair the problem? [Y,n] ")
         if(prompt == "n"):
             print("Abort.")
-            systemvariables.USRDOCS = "null"
+            systemvariables.init("USRDOCS", "null")
         elif(prompt == "N"):
             print("Abort.")
-            systemvariables.USRDOCS = "null"
+            systemvariables.init("USRDOCS", "null")
         else:
             success = repair.docs()
             if(success == True):
                 os.chdir("Documents")
-                systemvariables.USRDOCS = os.getcwd()
+                systemvariables.init("USRDOCS", os.getcwd())
     else:
         os.chdir("Documents")
-        systemvariables.USRDOCS = os.getcwd()
-    os.chdir(systemvariables.settingspath)
-    systemvariables.settingspath = os.getcwd()
+        systemvariables.init("USRDOCS", os.getcwd())
+    os.chdir(systemvariables.read("settingspath"))
+    systemvariables.modify("settingspath", os.getcwd())
     os.chdir("Settings")
-    systemvariables.loginfopath = os.getcwd()
+    systemvariables.init("loginfopath", os.getcwd())
     os.chdir("../Source")
-    systemvariables.srcpath = os.getcwd()
+    systemvariables.init("srcpath", os.getcwd())
     os.chdir("../../Users")
-    systemvariables.usrpath = os.getcwd()
+    systemvariables.init("usrpath", os.getcwd())
     os.chdir("..")
-    systemvariables.bshpath = os.getcwd()
-    
+    systemvariables.init("bshpath", os.getcwd())
+
+    # Figure out whether to enable functionality
+    os.chdir(systemvariables.read("loginfopath"))
+    # If the prompt.bws file doesn't exist, call on repair script to initialize one.
+    if(os.path.exists("prompt.bws") == False):
+        if(repair.promptInit() == 1):
+            os.system("cls")
+            print("Bash for Windows has run into a non-critical error:\nVARTRANSLATE_NOT_ACCESSABLE\n\n\
+This is not a critical error, so Bash for Windows will continue to work ok,\nminus some optional \
+functionality.")
+            choice = input("Do you want to contnue using Bash for Windows? [y,N] ")
+            if(choice.upper() != "Y"):
+                exit(1)
+            # Initialize variables with default values
+            systemvariables.init("varTrans", False)
+    else:
+        # Store the contents of the prompt.bws file into memory
+        file = open("prompt.bws", "r")
+        promptConfigTxt = file.read()
+        file.close()
+        txtOnLine = [""]
+        j = 0
+
+        # Store each line of text in an array
+        for i in promptConfigTxt:
+            if(i == "\n"):
+                txtOnLine.append("")
+                j += 1
+                continue
+            txtOnLine[j] = txtOnLine[j] + i
+        # Seperate each value with equals sign and put them in a system variable, unless it has
+        # a # as it's first character
+        j = 0
+        l = 0
+        for i in txtOnLine:
+            varNam = ""
+            varConts = ""
+            shift = 0
+            l = 0
+            for k in txtOnLine[j]:
+                if((l == 0) and (k == "#")):
+                    break
+                if(k == "="):
+                    shift = 1
+                    continue
+                if(shift == 0):
+                    varNam = varNam + k
+                else:
+                    varConts = varConts + k
+                l += 1
+            if(varNam != ""):
+                systemvariables.init(varNam, varConts)
+            j += 1
+        
+        # The varTrans variable's value should be converted into an integer.
+        if((systemvariables.read("varTrans") == "1")):
+            systemvariables.modifyVoid("varTrans", 1)
+        else:
+            if(systemvariables.read("varTrans") != -1):
+                systemvariables.modifyVoid("varTrans", 0)
+
     # Get user name
     cd.go("/")
     user = open("Bash/Bash/Settings/ivhzadgz.bws", "r")
@@ -185,30 +282,30 @@ def run():
     cd.go("~")
 
     # Reset the lastdir variable
-    systemvariables.lastdir = ""
+    systemvariables.modify("lastdir", "")
 
     # If the user has used Ctrl + C, quit without crashing
     try:
         # Do this until told to exit
         while(True):
             # Change display depending on where the user is in the file system
-            if(os.getcwd() == systemvariables.ROOT):
+            if(os.getcwd() == systemvariables.read("ROOT")):
                 display = "/"
-            elif(os.getcwd() == systemvariables.HOME):
+            elif(os.getcwd() == systemvariables.read("HOME")):
                 display = "~"
-            elif(os.getcwd() == systemvariables.USRDOCS):
+            elif(os.getcwd() == systemvariables.read("USRDOCS")):
                 display = "~/Documents"
-            elif(os.getcwd() == systemvariables.settingspath):
+            elif(os.getcwd() == systemvariables.read("settingspath")):
                 display = "/Bash/Bash"
-            elif(os.getcwd() == systemvariables.loginfopath):
+            elif(os.getcwd() == systemvariables.read("loginfopath")):
                 display = "/Bash/Bash/Settings"
-            elif(os.getcwd() == systemvariables.srcpath):
+            elif(os.getcwd() == systemvariables.read("srcpath")):
                 display = "/Bash/Bash/Source"
-            elif(os.getcwd() == systemvariables.usrpath):
+            elif(os.getcwd() == systemvariables.read("usrpath")):
                 display = "/Bash/Users"
-            elif(os.getcwd() == systemvariables.exepath):
+            elif(os.getcwd() == systemvariables.read("exepath")):
                 display = "/Bash/Bash/Source/Include"
-            elif(os.getcwd() == systemvariables.bshpath):
+            elif(os.getcwd() == systemvariables.read("bshpath")):
                 display = "/Bash"
             else:
                 display = os.getcwd()
@@ -221,29 +318,3 @@ def run():
     except KeyboardInterrupt:
         # If the program gets a interrupt, exit without crashing
         exit()
-
-# More checking for other scripts to use
-def usrcheck():
-    incorrect = True
-    while(incorrect == True):
-        user = open("Settings/ivhzadgz.bws", "r")
-        userguess = input("Type a user name # ")
-        if(userguess == user.read()):
-           incorrect = False
-        else:
-           print("Incorrect Username.")
-    user.close()
-def passcheck():
-        incorrect = True
-        while(incorrect == True):
-            password = open("Settings/kvnnadgz.bws", "r")
-            passguess = input("password # ")
-            if(passguess == password.read()):
-                incorrect = False
-            else:
-                print("Incorrect Password.")
-        password.close()
-
-# If the end user tries to run bash.py without Startup.py, then display this message
-print("This file isn't ment to be run by itself. To run Bash for Windows,")
-print("run the Startup program.")
