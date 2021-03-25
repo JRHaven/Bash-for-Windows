@@ -21,7 +21,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from time import sleep
 import os, username, ls, cd, systemvariables, pwd, socket, cat
 import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
-import mv, oschk, repair, tofile, uname, date, script
+import mv, oschk, repair, tofile, uname, date, script, shutil
 
 def runcmd(command):
     # Find a space. If one is found, put it in another variable.
@@ -103,6 +103,22 @@ def runcmd(command):
     
     # Commands
     if(command == "exit"):
+        os.chdir(systemvariables.read("tmppath"))
+        conts = ls.list()
+        for i in conts:
+            try:
+                if(os.path.isfile(i) == True):
+                    os.remove(i)
+                elif(os.path.isdir(i) == True):
+                    shutil.rmtree(i)
+                else:
+                    continue
+            except Exception as e:
+                print("Bash for Windows has run into a non-critical issue: TMP_DEL_ERR\nThe Error message is:\
+\n" + str(e), "\nThis occured while deleting file", i, "in the temp directory.\nPress Enter to Continue...")
+                input("")
+                continue
+        print("Goodbye!")
         exit(0)
     elif(command == "ls"):
         ls.show(argsArr)
