@@ -22,13 +22,21 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Put any arrays seperately, we cannot handle arrays in the dynamic format of variables.
 directorystack = ["","","","","","","",""]
 
+# Universal color class to print color and bold text
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
 varsNames = []
 varConts = []
-
-def init(name, conts):
-    #print("New Init! Name:", name, "Value:", conts)
-    varsNames.append(name)
-    varConts.append(conts)
 
 def lookupIndex(name):
     j = 0
@@ -43,6 +51,11 @@ def read(name):
     if(i == -1):
         return -1
     else:
+        # Show Debug Messages if it's enabled. To avoid endless looping, don't do this
+        # if the name given is debugMsg.
+        if(name != "debugMsg"):
+            if(read("debugMsg") == 1):
+                print(color.YELLOW + color.BOLD + "[Debug]" + color.END + " Var Read. Name:", name)
         return varConts[i]
 
 def modify(name, conts):
@@ -50,9 +63,27 @@ def modify(name, conts):
     if(i == -1):
         return -1
     else:
+        oldVar = read(name)
         varConts[i] = conts
+
+        # Debug Message
+        if(read("debugMsg") == 1):
+            print(color.YELLOW + color.BOLD + "[Debug]" + color.END + " Var Modify. Name:", name, "\nOld Value:", oldVar, "New Value:", conts)
         return 0
 
 def modifyVoid(name, conts):
     if(modify(name, conts) == -1):
         init(name, conts)
+
+def init(name, conts):
+    if(lookupIndex(name) != -1):
+        # Debug Message
+        if(read("debugMsg") == 1):
+            print(color.YELLOW + color.BOLD + "[Debug]" + color.END + " Init Exists! Modifying instead. Name:", name)
+        modify(name, conts)
+    else:
+        # Debug Message
+        if(read("debugMsg") == 1):
+            print(color.YELLOW + color.BOLD + "[Debug]" + color.END + " New Init! Name:", name, "Value:", conts)
+        varsNames.append(name)
+        varConts.append(conts)

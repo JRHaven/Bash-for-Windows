@@ -151,6 +151,20 @@ def runcmd(command):
         mkdir.create(argsArr)
     elif(command == "date"):
         date.show(argsArr)
+    elif(command == "restart"):
+        # Debug Message
+        if(systemvariables.read("debugMsg") == 1):
+            print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" 
++ systemvariables.color.END + " Bash: Restarting!")
+
+        # Save current directory
+        cwd = os.getcwd()
+        os.chdir(systemvariables.read("tmppath"))
+        file = open("lastcwd.bws", "w")
+        file.write(str(cwd))
+        file.close()
+        systemvariables.modifyVoid("restart", 1)
+        return 0
     else:
         if(argsArr[0] == "="):
             if(systemvariables.lookupIndex(command) == -1):
@@ -179,6 +193,11 @@ def runcmd(command):
 def run():
     # Check once again to make sure we are running Windows
     oschk.check()
+
+    # Debug Message
+    if(systemvariables.read("debugMsg") == 1):
+        print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" + 
+systemvariables.color.END + " Bash: Starting!")
     os.chdir(systemvariables.read("exepath"))
     os.chdir("../../../../")
     systemvariables.init("ROOT", os.getcwd())
@@ -211,66 +230,16 @@ def run():
     systemvariables.init("usrpath", os.getcwd())
     os.chdir("..")
     systemvariables.init("bshpath", os.getcwd())
+    # Debug Message
+    if(systemvariables.read("debugMsg") == 1):
+        print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" 
++ systemvariables.color.END + " Bash: " + os.getcwd())
+    os.chdir("temp")
+    systemvariables.init("tmppath", os.getcwd())
+    os.chdir("..")
 
-    # Figure out whether to enable functionality
-    os.chdir(systemvariables.read("loginfopath"))
-    # If the prompt.bws file doesn't exist, call on repair script to initialize one.
-    if(os.path.exists("prompt.bws") == False):
-        if(repair.promptInit() == 1):
-            os.system("cls")
-            print("Bash for Windows has run into a non-critical error:\nVARTRANSLATE_NOT_ACCESSABLE\n\n\
-This is not a critical error, so Bash for Windows will continue to work ok,\nminus some optional \
-functionality.")
-            choice = input("Do you want to contnue using Bash for Windows? [y,N] ")
-            if(choice.upper() != "Y"):
-                exit(1)
-            # Initialize variables with default values
-            systemvariables.init("varTrans", False)
-    else:
-        # Store the contents of the prompt.bws file into memory
-        file = open("prompt.bws", "r")
-        promptConfigTxt = file.read()
-        file.close()
-        txtOnLine = [""]
-        j = 0
-
-        # Store each line of text in an array
-        for i in promptConfigTxt:
-            if(i == "\n"):
-                txtOnLine.append("")
-                j += 1
-                continue
-            txtOnLine[j] = txtOnLine[j] + i
-        # Seperate each value with equals sign and put them in a system variable, unless it has
-        # a # as it's first character
-        j = 0
-        l = 0
-        for i in txtOnLine:
-            varNam = ""
-            varConts = ""
-            shift = 0
-            l = 0
-            for k in txtOnLine[j]:
-                if((l == 0) and (k == "#")):
-                    break
-                if(k == "="):
-                    shift = 1
-                    continue
-                if(shift == 0):
-                    varNam = varNam + k
-                else:
-                    varConts = varConts + k
-                l += 1
-            if(varNam != ""):
-                systemvariables.init(varNam, varConts)
-            j += 1
-        
-        # The varTrans variable's value should be converted into an integer.
-        if((systemvariables.read("varTrans") == "1")):
-            systemvariables.modifyVoid("varTrans", 1)
-        else:
-            if(systemvariables.read("varTrans") != -1):
-                systemvariables.modifyVoid("varTrans", 0)
+    # If we want to restart Bash for Windows, we'll need this variable.
+    systemvariables.modifyVoid("restart", 0)
 
     # Get user name
     cd.go("/")
@@ -280,6 +249,11 @@ functionality.")
     
     # Get back to "Home" folder
     cd.go("~")
+
+    # If the system variable for the last directory exists, go to that directory
+    # (in case of restart)
+    if(systemvariables.read("startDir") != -1):
+        os.chdir(systemvariables.read("startDir"))
 
     # Reset the lastdir variable
     systemvariables.modify("lastdir", "")
@@ -310,11 +284,18 @@ functionality.")
             else:
                 display = os.getcwd()
                 
-            # Prompt
-            command = input(usr + "@" + socket.gethostname() + ":" + display + " $ ")
+            # Prompt. If color prompt is enabled, use color.
+            if(systemvariables.read("colorPrompt") == 1):
+                command = input(systemvariables.color.BOLD + 
+systemvariables.color.GREEN + usr + "@" + socket.gethostname() + systemvariables.color.END + 
+":" + systemvariables.color.BOLD + systemvariables.color.BLUE + display + systemvariables.color.END + 
+"$ ")
+            else:
+                command = input(usr + "@" + socket.gethostname() + ":" + display + "$ ")
 
             # Run the command using the function above.
-            runcmd(command)
+            if(runcmd(command) == 0):
+                return 0
     except KeyboardInterrupt:
         # If the program gets a interrupt, exit without crashing
         exit()

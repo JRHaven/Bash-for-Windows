@@ -112,8 +112,8 @@ def docs():
         print("Failed. USRDOCS Variable set as null.")
         return False
 
-def promptInit():
-    os.chdir(systemvariables.read("loginfopath"))
+def promptInit(pth):
+    os.chdir(pth)
     if(os.path.exists("prompt.bws") == False):
         prompt = open("prompt.bws", "w")
         prompt.write("# prompt.bws\n")
@@ -132,7 +132,9 @@ are optional variables that directly corellate with Bash for Windows itself,\n# 
 you should keep these in the file.\n\n# To add more variables, it is suggested for this file to stay organized to put any ")
         prompt.write("of your own variables under this first set of variables.\n# Any variables before the \"protectend\" line will be\
 read and write protected, only avalible to the system or an internally elevated user.\n")
+        prompt.write("#debugMsg=1\n")
         prompt.write("#varTrans=1\n")
+        prompt.write("#colorPrompt=1\n")
         prompt.write("\n# Put your custom variables below:\n")
         prompt.close()
         return 0

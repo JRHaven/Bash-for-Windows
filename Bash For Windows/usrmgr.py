@@ -20,10 +20,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # time the user interacts with Bash For Windows.
 
 # Libraries
-import os
-import repair
-import bash, platform, time
-import systemvariables, oschk, touch, nano
+import os, repair, bash, platform, time, systemvariables, oschk, touch, nano, socket
 
 # Clear the screen to get rid of the messages from the imported libraries
 os.system("cls")
@@ -50,60 +47,145 @@ def autoRun(autorun):
 
 # Login Prompt
 def logon():
-    # Check again to make sure we are running Windows
-    oschk.check()
-
-    os.chdir(systemvariables.read("exepath"))
-    os.chdir("../../")
-    incorrect = True
-    while(incorrect == True):
-        user = open("Settings/ivhzadgz.bws", "r")
-        userguess = input("Type a user name # ")
-        if(userguess == user.read()):
-           incorrect = False
-        else:
-           print("Incorrect Username.")
-    incorrect = True
-
-    # Check double check to make sure we are running Windows
-    if(platform.system() != "Windows"):
-        print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-        os.system("bash")
-        exit()
-    
-    while(incorrect == True):
-        password = open("Settings/kvnnadgz.bws", "r")
-        passguess = input("password # ")
-        if(passguess == password.read()):
-            incorrect = False
-            systemvariables.init("usrsession", userguess)
-        else:
-            print("Incorrect Password.")
-    password.close()
-    print("Welcome to Bash(the Bourne Again Shell) for Windows!")
-
-    # Check for autorun.bws file, and call a function to take care of the rest
-    if(os.path.exists("Settings/autorun.bws") == False):
-        if(os.path.exists("Settings/noauto.bws") == False):
-            autorun = input("Bash for Windows cannot find a autorun.bws file. Create one? (Y,n) ")
-            if((autorun == "n") or (autorun == "N")):
-                touch.write(["Settings/noauto.bws"])
-            else:
-                touch.write(["Settings/autorun.bws"])
-                print("autorun.bws file has been placed inside of the Bash/Bash/Settings folder.")
-                edit = input("Would you like to modify the autorun.bws file? (Y,n) ")
-                if((edit != "n") and (edit != "N")):
-                    nano.write(["Settings/autorun.bws"])
-                    file = open("Settings/autorun.bws", "r")
-                    autoRun(str(file.read()))
-                    file.close()
+    # If the prompt.bws file doesn't exist, call on repair script to initialize one.
+    if(os.path.exists("prompt.bws") == False):
+        if(repair.promptInit(os.getcwd()) == 1):
+            os.system("cls")
+            print("Bash for Windows has run into a non-critical error:\nPROMPT_NOT_ACCESSABLE\n\n\
+This is not a critical error, so Bash for Windows will continue to work ok,\nminus some optional \
+functionality.")
+            choice = input("Do you want to contnue using Bash for Windows? [y,N] ")
+            if(choice.upper() != "Y"):
+                exit(1)
+            # Initialize variables with default values
+            systemvariables.init("debugMsg", 0)
+            systemvariables.init("varTrans", 0)
+            systemvariables.init("colorPrompt", 0)
     else:
-        file = open("Settings/autorun.bws", "r")
-        autoRun(str(file.read()))
-        file.close()
+        # Check again to make sure we are running Windows
+        oschk.check()
 
-    user.close()
-    bash.run()
+        os.chdir(systemvariables.read("exepath"))
+        os.chdir("../../")
+        incorrect = True
+        while(incorrect == True):
+            user = open("Settings/ivhzadgz.bws", "r")
+            userguess = input(socket.gethostname() + " login: ")
+            if(userguess == user.read()):
+                incorrect = False
+            else:
+                print("Incorrect Username.")
+        incorrect = True
+
+        # Check double check to make sure we are running Windows
+        #if(platform.system() != "Windows"):
+        #    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
+        #    os.system("bash")
+        #    exit()
+        
+        while(incorrect == True):
+            password = open("Settings/kvnnadgz.bws", "r")
+            passguess = input("Password # ")
+            if(passguess == password.read()):
+                incorrect = False
+                systemvariables.init("usrsession", userguess)
+            else:
+                print("Incorrect Password.")
+        password.close()
+        print("Welcome to Bash(the Bourne Again Shell) for Windows!")
+
+        while(True):
+            # Load in prompt.bws variables
+            os.chdir(systemvariables.read("settingspath") + "/Settings")
+
+            # Store the contents of the prompt.bws file into memory
+            file = open("prompt.bws", "r")
+            promptConfigTxt = file.read()
+            file.close()
+            txtOnLine = [""]
+            j = 0
+
+            # Store each line of text in an array
+            for i in promptConfigTxt:
+                if(i == "\n"):
+                    txtOnLine.append("")
+                    j += 1
+                    continue
+                txtOnLine[j] = txtOnLine[j] + i
+            # Seperate each value with equals sign and put them in a system variable, unless it has
+            # a # as it's first character
+            j = 0
+            l = 0
+            for i in txtOnLine:
+                varNam = ""
+                varConts = ""
+                shift = 0
+                l = 0
+                for k in txtOnLine[j]:
+                    if((l == 0) and (k == "#")):
+                        break
+                    if(k == "="):
+                        shift = 1
+                        continue
+                    if(shift == 0):
+                        varNam = varNam + k
+                    else:
+                        varConts = varConts + k
+                    l += 1
+                if(varNam != ""):
+                    systemvariables.init(varNam, varConts)
+                j += 1
+            
+            # The varTrans variable's value should be converted into an integer, same for debugMsg and colorPrompt
+            if((systemvariables.read("varTrans") == "1")):
+                systemvariables.modifyVoid("varTrans", 1)
+            else:
+                if(systemvariables.read("varTrans") != -1):
+                    systemvariables.modifyVoid("varTrans", 0)
+            if((systemvariables.read("debugMsg") == "1")):
+                systemvariables.modifyVoid("debugMsg", 1)
+            else:
+                if(systemvariables.read("debugMsg") != -1):
+                    systemvariables.modifyVoid("debugMsg", 0)
+            if((systemvariables.read("colorPrompt") == "1")):
+                systemvariables.modifyVoid("colorPrompt", 1)
+            else:
+                if(systemvariables.read("colorPrompt") != -1):
+                    systemvariables.modifyVoid("colorPrompt", 0)
+            
+            # We need to go to the parent directory
+            os.chdir("..")
+
+            # Check for autorun.bws file, and call a function to take care of the rest
+            if(os.path.exists("Settings/autorun.bws") == False):
+                if(os.path.exists("Settings/noauto.bws") == False):
+                    autorun = input("Bash for Windows cannot find a autorun.bws file. Create one? (Y,n) ")
+                    if((autorun == "n") or (autorun == "N")):
+                        touch.write(["Settings/noauto.bws"])
+                    else:
+                        touch.write(["Settings/autorun.bws"])
+                        print("autorun.bws file has been placed inside of the Bash/Bash/Settings folder.")
+                        edit = input("Would you like to modify the autorun.bws file? (Y,n) ")
+                        if((edit != "n") and (edit != "N")):
+                            nano.write(["Settings/autorun.bws"])
+                            file = open("Settings/autorun.bws", "r")
+                            autoRun(str(file.read()))
+                            file.close()
+            else:
+                file = open("Settings/autorun.bws", "r")
+                autoRun(str(file.read()))
+                file.close()
+
+            user.close()
+            if(bash.run() == 0):
+                if(systemvariables.read("restart") == 1):
+                    os.chdir(systemvariables.read("tmppath"))
+                    file = open("lastcwd.bws", "r")
+                    todir = file.read()
+                    file.close()
+                    systemvariables.modifyVoid("startDir", str(todir))
+                    continue
+            break
     
 # Function for checking a password based on username provided
 def checkpassword():

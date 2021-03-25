@@ -43,8 +43,9 @@ def add(path):
 # Function to remove an entry from the stack
 def remove(times):
 
-    # Commented lines of code are for debugging purposes only.
-    #print(systemvariables.directorystack)
+    # Debug message if it is enabled
+    if(systemvariables.read("debugMsg") == 1):
+        print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" + systemvariables.color.END + " Pushd: " + str(systemvariables.directorystack))
 
     # Counter
     j = 0
@@ -69,7 +70,10 @@ def remove(times):
 
         # Increment the counter to prepare to do it again!
         j += 1
-    #print(systemvariables.directorystack)
+    
+    # Debug message
+    if(systemvariables.read("debugMsg") == 1):
+        print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" + systemvariables.color.END + " Pushd: " + str(systemvariables.directorystack))
 
 # Main Function
 def go(args):

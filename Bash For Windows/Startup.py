@@ -27,7 +27,6 @@ import bash
 import os.path
 import username
 import usrmgr
-#import usrmgr2
 import repair
 import systemvariables
 import time
@@ -41,10 +40,10 @@ systemvariables.init("exepath", os.getcwd())
 systemvariables.init("settingspath", systemvariables.read("exepath") + "/../..")
 
 # Check to make sure we are running on Windows and if not start bash
-if(platform.system() != "Windows"):
-    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-    os.system("bash")
-    exit()
+#if(platform.system() != "Windows"):
+#    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
+#    os.system("bash")
+#    exit()
     
 # Move to the root of the file structure
 os.chdir(systemvariables.read("exepath") + "/../..")
@@ -95,6 +94,10 @@ try:
         usrname = open("Bash/Bash/Settings/kvnnadgz.bws")
 except KeyboardInterrupt:
     exit(0)
+
+# Check if the temp directory exists. If not, create it.
+if(os.path.exists("Bash/temp") == False):
+    os.mkdir("Bash/temp")
 
 # Go back to here so that we don't trigger an unneeded repair
 os.chdir(systemvariables.read("settingspath") + "/../..")

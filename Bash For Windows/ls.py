@@ -44,7 +44,9 @@ def show(args):
             i = 0
             j = 0
             for dirs in dir_list:
-                #print(os.path.isdir(str(dir_list[i])))
+                # Debug message if it is enabled
+                if(systemvariables.read("debugMsg") == 1):
+                    print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" + systemvariables.color.END + " ls:", os.path.isdir(str(dir_list[i])))
                 if(os.path.isdir(dir_list[i]) == True):
                     if(i == len(dir_list) - 1):
                         output = output + dir_list[i] + " [DIR]"
@@ -106,7 +108,9 @@ def show(args):
         i = 0
         j = 0
         for dirs in dir_list:
-            #print(os.path.isdir(str(dir_list[i])))
+            # Debug message if it is enabled
+            if(systemvariables.read("debugMsg") == 1):
+                print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" + systemvariables.color.END + " ls:", os.path.isdir(str(dir_list[i])))
             if(os.path.isdir(dir_list[i]) == True):
                 if(os.path.isdir(dir_list[i]) == True):
                     if(i == len(dir_list) - 1):
