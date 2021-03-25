@@ -78,10 +78,10 @@ functionality.")
         incorrect = True
 
         # Check double check to make sure we are running Windows
-        #if(platform.system() != "Windows"):
-        #    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-        #    os.system("bash")
-        #    exit()
+        if(platform.system() != "Windows"):
+            print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
+            os.system("bash")
+            exit()
         
         while(incorrect == True):
             password = open("Settings/kvnnadgz.bws", "r")
