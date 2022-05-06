@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2021 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -18,18 +18,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Startup is the file that starts off Bash For Windows. You can only run Bash for Windows with this script.
 
 # Import libraries
-import platform
-import os
+import platform, os, shutil
 # If we are not in the right place, get us to the right place
 if(os.path.exists(os.getcwd() + "/../Include") == False):
     os.chdir("Bash/Bash/Source/Include")
-import bash
-import os.path
-import username
-import usrmgr
-import repair
-import systemvariables
-import time
+import bash, os.path, username, usrmgr, repair, systemvariables, time
 
 # The commented out lines are for me to use for debugging purposes only.
 #print(os.getcwd())
@@ -40,10 +33,10 @@ systemvariables.init("exepath", os.getcwd())
 systemvariables.init("settingspath", systemvariables.read("exepath") + "/../..")
 
 # Check to make sure we are running on Windows and if not start bash
-if(platform.system() != "Windows"):
-    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-    os.system("bash")
-    exit()
+#if(platform.system() != "Windows"):
+#    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
+#    os.system("bash")
+#    exit()
     
 # Move to the root of the file structure
 os.chdir(systemvariables.read("exepath") + "/../..")
@@ -54,44 +47,12 @@ os.chdir("../..")
 #print(os.path.exists("Bash/Users"))
 # See if any folders are deleted and if they are attempt to fix it using the repair script
 try:
-    if(os.path.exists("Bash/Users") == False):
+    if(os.path.exists("Bash/usrdata") == False):
         choice = input("Unfortunatly, Bash for Windows could not find your data. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
         if((choice == "y") or (choice == "Y")):
             repair.baseusrrepair()
         else:
             print("Abort.")
-except KeyboardInterrupt:
-    exit(0)
-
-# Do the following if the username doesn't exist.
-if(os.path.exists("Bash/Bash/Settings/ivhzadgz.bws") == False):
-    print("Unfortunatly, Bash for Windows cannot find your user settings.")
-    choice = input("Do you want to try to fix this problem? [Y,n] ")
-    if((choice == "y") or (choice == "Y")):
-        username.get()
-        os.chdir("../..")
-        usrname = open("Bash/Bash/Settings/ivhzadgz.bws")
-    else:
-        print("Abort. Username has been tempoarily set to null. Expect the enviornment to be unstable.")
-        usrname = open("usrnam.txt", "w")
-        usrname.write("null")
-        usrname.close()
-        usrname = open("usrnam.txt")
-else:
-    usrname = open("Bash/Bash/Settings/ivhzadgz.bws")
-
-# Do the following if the password doesn't exist
-try:
-    if(os.path.exists("Bash/Bash/Settings/kvnnadgz.bws") == False):
-        print("Unfortunatly, Bash for Windows cannot find your user settings.")
-        choice = input("Do you want to try to fix this problem? [Y,n] ")
-        if((choice == "y") or (choice == "Y")):
-            username.get()
-            os.chdir("../..")
-        else:
-            print("Abort. Expect the enviornment to be unstable.")
-    else:
-        usrname = open("Bash/Bash/Settings/kvnnadgz.bws")
 except KeyboardInterrupt:
     exit(0)
 
@@ -101,20 +62,65 @@ if(os.path.exists("Bash/temp") == False):
 
 # Go back to here so that we don't trigger an unneeded repair
 os.chdir(systemvariables.read("settingspath") + "/../..")
-#print(os.getcwd())
-# Check if the user folder was deleted
+
+os.chdir(systemvariables.read("settingspath") + "/Settings")
 try:
-    if(os.path.exists("Bash/Users/" + usrname.read()) == False):
-        choice = input("Unfortunatly, Bash for Windows could not find your data. Do you want to try to fix this with Bash for Windows Repair? [y, N] # ")
-        if((choice == "y") or (choice == "Y")):
-            repair.baseusrfilerepair()
+    if(os.path.exists("ver.bws") == False):
+        ver = open("ver.bws", "w")
+        ver.write("2.1d")
+        ver.close()
+    else:
+        ver = open("ver.bws", "r")
+        verstr = ver.read()
+        ver.close()
+        verNum = 0.0
+        indev = False
+        error = False
+        if(len(verstr.split("d")) == 1):
+            try:
+                verNum = float(verstr)
+            except ValueError:
+                error = True
+                print("Bash for Windows has run into a non-critical issue: VER_CANNOT_CONVERT_FLOAT\nThis \
+probably happened because of an invalid version string. An invalid version string may be okay now , but may \
+cause problems in the future. To fix, you can try deleting the ver.bws file in the Bash/Bash/Settings folder.\n")
+                input("Press enter to continue...")
         else:
-            print("Abort.")
+            verArr = verstr.split("d")
+            indev = True
+            try:
+                verNum = float(verArr[0])
+            except ValueError:
+                error = True
+                print("Bash for Windows has run into a non-critical issue: VER_CANNOT_CONVERT_FLOAT\nThis \
+probably happened because of an invalid version string. An invalid version string may be okay now , but may \
+cause problems in the future. To fix, you can try deleting the ver.bws file in the Bash/Bash/Settings folder.\n")
+                input("Press enter to continue...")
+        
+        # Make needed changes to keep folder structure upp to date
+        if(error == False):
+            print("Bash for Windows has changed for this version and changes need to take place \
+to the folder structure of Bash for Windows for it to continue to be operational.\nIf you do not want Bash for \
+Windows to touch your data, you can skip this operation for now. However, Bash for Windows will probably crash.\n\
+It is highly recommended to let Bash for Windows proceed. To see what changes will be made, check the changelog on the GitHub.")
+            approval = input("Should Bash for Windows continue? [Y,n] ")
+            if(approval.lower != "n"):
+                if(os.path.exists("ivhzadgz.bws") == False):
+                    print("\nBash for Windows ran into an issue! The system could not find the username. Bash for Windows \
+cannot continue. Abort.")
+                    exit(1)
+                usr = open("ivhzadgz.bws", "r")
+                usrnam = usr.read()
+                usr.close()
+                os.chdir("../..")
+                shutil.copytree("Users/" + usrnam, "usrdata")
+                shutil.rmtree("Users")
+                os.system("cls")
+                print("System successfully migrated!")
+                os.chdir("Bash/Settings")
+
 except KeyboardInterrupt:
     exit(0)
-
-# We don't need this file to stay open
-usrname.close()
 
 # Go back to here so that we don't trigger an unneeded repair
 os.chdir(systemvariables.read("settingspath") + "/../..")

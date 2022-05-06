@@ -183,22 +183,12 @@ svar.color.END + " Bash: Starting!")
     os.chdir(svar.read("exepath"))
     os.chdir("../../../../")
     svar.init("ROOT", os.getcwd())
-    os.chdir("Bash/Users/" + svar.read("usrsession"))
+    os.chdir("Bash/usrdata/")
     svar.init("HOME", os.getcwd())
     if(os.path.exists("Documents") == False):
-        print("Unfortunatly, Bash for Windows cannot find your documents.")
-        prompt = input("Do you want to try to repair the problem? [Y,n] ")
-        if(prompt == "n"):
-            print("Abort.")
-            svar.init("USRDOCS", "null")
-        elif(prompt == "N"):
-            print("Abort.")
-            svar.init("USRDOCS", "null")
-        else:
-            success = repair.docs()
-            if(success == True):
-                os.chdir("Documents")
-                svar.init("USRDOCS", os.getcwd())
+        os.mkdir("Documents")
+        os.chdir("Documents")
+        svar.init("USRDOCS", os.getcwd())
     else:
         os.chdir("Documents")
         svar.init("USRDOCS", os.getcwd())
@@ -208,7 +198,7 @@ svar.color.END + " Bash: Starting!")
     svar.init("loginfopath", os.getcwd())
     os.chdir("../Source")
     svar.init("srcpath", os.getcwd())
-    os.chdir("../../Users")
+    os.chdir("../../usrdata")
     svar.init("usrpath", os.getcwd())
     os.chdir("..")
     svar.init("bshpath", os.getcwd())
@@ -258,7 +248,7 @@ svar.color.END + " Bash: Starting!")
             elif(os.getcwd() == svar.read("srcpath")):
                 display = "/Bash/Bash/Source"
             elif(os.getcwd() == svar.read("usrpath")):
-                display = "/Bash/Users"
+                display = "/Bash/usrdata"
             elif(os.getcwd() == svar.read("exepath")):
                 display = "/Bash/Bash/Source/Include"
             elif(os.getcwd() == svar.read("bshpath")):

@@ -62,36 +62,6 @@ functionality.")
             systemvariables.init("varTrans", 0)
             systemvariables.init("colorPrompt", 0)
     else:
-        # Check again to make sure we are running Windows
-        oschk.check()
-
-        os.chdir(systemvariables.read("exepath"))
-        os.chdir("../../")
-        incorrect = True
-        while(incorrect == True):
-            user = open("Settings/ivhzadgz.bws", "r")
-            userguess = input(socket.gethostname() + " login: ")
-            if(userguess == user.read()):
-                incorrect = False
-            else:
-                print("Incorrect Username.")
-        incorrect = True
-
-        # Check double check to make sure we are running Windows
-        if(platform.system() != "Windows"):
-            print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-            os.system("bash")
-            exit()
-        
-        while(incorrect == True):
-            password = open("Settings/kvnnadgz.bws", "r")
-            passguess = input("Password # ")
-            if(passguess == password.read()):
-                incorrect = False
-                systemvariables.init("usrsession", userguess)
-            else:
-                print("Incorrect Password.")
-        password.close()
         print("Welcome to Bash(the Bourne Again Shell) for Windows!")
 
         while(True):
@@ -176,7 +146,6 @@ functionality.")
                 autoRun(str(file.read()))
                 file.close()
 
-            user.close()
             if(bash.run() == 0):
                 if(systemvariables.read("restart") == 1):
                     os.chdir(systemvariables.read("tmppath"))
@@ -186,41 +155,3 @@ functionality.")
                     systemvariables.modifyVoid("startDir", str(todir))
                     continue
             break
-    
-# Function for checking a password based on username provided
-def checkpassword():
-    if(systemvariables.lookupIndex("usrsession") == -1):
-        print("ERROR: Bash for Windows has ran into a critical error and must shutdown.\nError: USRSESSION_VAR_UNDEFINED")
-        time.sleep(3)
-        exit(1)
-    session = systemvariables.read("usrsession")
-    user = ""
-    incorrect = True
-    if(os.path.exists("Settings/ivhzadgzzoneth.bws") == True):
-        potentialusr1 = open("Settings/ivhzadgzzoneth.bws" + "r")
-        if(session == potentialusr1.read()):
-            user = "Settings/ivhzadgzzoneth.bws"
-    potentialusr2 = open("Settings/ivhzadgz.bws", "r")
-    if(session == potentialusr2.read()):
-        user = "Settings/ivhzadgzzoneth.bws"
-    else:
-        user = "No User"
-    if(user != "No User"):
-        if(user == "Settings/ivhzadgzzoneth.bws"):
-            while(incorrect == True):
-                password = open("Settings/kvnnadgzzoneth.bws", "r")
-                passguess = input("password # ")
-                if(passguess == password.read()):
-                    incorrect = False
-                else:
-                   print("Incorrect Password.")
-        else:
-            while(incorrect == True):
-                password = open("Settings/kvnnadgz.bws", "r")
-                passguess = input("password # ")
-                if(passguess == password.read()):
-                    incorrect = False
-                else:
-                    print("Incorrect Password.")
-    else:
-        logon()
