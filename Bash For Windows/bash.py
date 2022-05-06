@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2021 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -19,9 +19,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Libraries
 from time import sleep
-import os, username, ls, cd, systemvariables, pwd, socket, cat
+import os, username, ls, cd, pwd, socket, cat
 import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
 import mv, oschk, repair, tofile, uname, date, script, shutil
+import systemvariables as svar
 
 def runcmd(command):
     # Find a space. If one is found, put it in another variable.
@@ -31,79 +32,43 @@ def runcmd(command):
     # Counters
     i = 0
     j = 0
-    k = 0
-    flag = 0
-    flag2 = 0
 
-    # Only do it if there is indeed a space
+    # We're going to need this for varTrans later!
+    varsQ = command.find("$")
+
+    # Get an array of arguments from the command the user entered
     if(args != -1):
-        for i in command:
-            # Only do this after a space
-            if(j > args):
-
-                # If the character is \, set a flag and remove the \. If not, turn off the flag
-                if(i == "\\"):
-                    flag = 1
-                    if(i == "\\"):
-                        continue
-                    
-                # If we come across a space, add an item to the array of arguments and skip the rest,
-                # unless the flag set before is set
-                if((i == " ") and (flag == 0)):
-                    k += 1
-                    argsArr.append("")
-                    continue
-                elif((i == " " and (flag == 1))):
-                    flag = 0
-
-                # Take the current item in the args array and put in each character of the input
-                # string, then delete that same character from the input string
-                argsArr[k] = argsArr[k] + i
-                command = command[0 : j : ]
-            else:
-                j += 1
-    # Reset the counters
-    i = 0
-    j = 0
-    k = 0
-
-    # If we have at least 1 space, make sure you take out the last character
-    # in the command variable that happens to be a space
+        argsArr = command.split(" ")
+    
+    # Set the command to be the actual command that was typed in, not the whole string
+    # the user typed. That would be very cluttered and hard to work with.
     if(args != -1):
-        command = command[:-1:]
+        command = argsArr[0]
+
+    # Take off the command. That isn't really needed in are array of arguments.
+    argsArr = argsArr[1::]
+    if(len(argsArr) == 0):
+        argsArr.append("")
     
     # If the value set in the system variable "varTrans" is set to true, then replace all
     # variables with their values. First, make sure it exists.
-    varTrans = systemvariables.read("varTrans")
-    j = 0
-    l = 0
-    i = 0
+    varTrans = svar.read("varTrans")
+
     if(varTrans != -1):
-        if(varTrans == 1):
+        if(varsQ != -1):
             for i in argsArr:
-                var = 0
-                varNam = ""
-                k = ""
-                for k in argsArr[j]:
-                    # If this is the first character and it is a $, we are setting up to look
-                    # at a possible variable.
-                    if((l == 0) and (k == "$")):
-                        var = 1
-                        l += 1
-                        continue
-                    if((l >= 0) and (var != 1)):
-                        break
-                    else:
-                        varNam = varNam + k
-                # Check to make sure the variable called for exists. If it does, set this argument
-                # to be the value in the variable.
-                if(systemvariables.read(varNam) != -1):
-                    argsArr[j] = systemvariables.read(varNam)
-                j += 1
+                if(i[0] == "$"):
+                    varnam = i.split("$")[1]
+                    if(svar.lookupIndex(varnam) != -1):
+                        argsArr[j] = svar.read(varnam)
+
+    # Give the list of arguments in a debug string if the user wanted in the prompt.bws file
+    if(svar.read("debugMsg") == 1):
+        print(svar.color.YELLOW + svar.color.BOLD + "[Debug]" + svar.color.END + " Arguments: " + str(argsArr))
     
     # Commands
     if(command == "exit"):
-        os.chdir(systemvariables.read("tmppath"))
+        os.chdir(svar.read("tmppath"))
         conts = ls.list()
         for i in conts:
             try:
@@ -169,24 +134,24 @@ def runcmd(command):
         date.show(argsArr)
     elif(command == "restart"):
         # Debug Message
-        if(systemvariables.read("debugMsg") == 1):
-            print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" 
-+ systemvariables.color.END + " Bash: Restarting!")
+        if(svar.read("debugMsg") == 1):
+            print(svar.color.YELLOW + svar.color.BOLD + "[Debug]" 
++ svar.color.END + " Bash: Restarting!")
 
         # Save current directory
         cwd = os.getcwd()
-        os.chdir(systemvariables.read("tmppath"))
+        os.chdir(svar.read("tmppath"))
         file = open("lastcwd.bws", "w")
         file.write(str(cwd))
         file.close()
-        systemvariables.modifyVoid("restart", 1)
+        svar.modifyVoid("restart", 1)
         return 0
     else:
         if(argsArr[0] == "="):
-            if(systemvariables.lookupIndex(command) == -1):
-                systemvariables.init(command, argsArr[1])
+            if(svar.lookupIndex(command) == -1):
+                svar.init(command, argsArr[1])
             else:
-                systemvariables.modifyVoid(command, argsArr[1])
+                svar.modifyVoid(command, argsArr[1])
         else:
             dirContents = ls.list()
             if(command == ""):
@@ -207,55 +172,56 @@ def runcmd(command):
 
 # Main function. First Set all other system variables
 def run():
+    print("bash.run called")
     # Check once again to make sure we are running Windows
     oschk.check()
 
     # Debug Message
-    if(systemvariables.read("debugMsg") == 1):
-        print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" + 
-systemvariables.color.END + " Bash: Starting!")
-    os.chdir(systemvariables.read("exepath"))
+    if(svar.read("debugMsg") == 1):
+        print(svar.color.YELLOW + svar.color.BOLD + "[Debug]" + 
+svar.color.END + " Bash: Starting!")
+    os.chdir(svar.read("exepath"))
     os.chdir("../../../../")
-    systemvariables.init("ROOT", os.getcwd())
-    os.chdir("Bash/Users/" + systemvariables.read("usrsession"))
-    systemvariables.init("HOME", os.getcwd())
+    svar.init("ROOT", os.getcwd())
+    os.chdir("Bash/Users/" + svar.read("usrsession"))
+    svar.init("HOME", os.getcwd())
     if(os.path.exists("Documents") == False):
         print("Unfortunatly, Bash for Windows cannot find your documents.")
         prompt = input("Do you want to try to repair the problem? [Y,n] ")
         if(prompt == "n"):
             print("Abort.")
-            systemvariables.init("USRDOCS", "null")
+            svar.init("USRDOCS", "null")
         elif(prompt == "N"):
             print("Abort.")
-            systemvariables.init("USRDOCS", "null")
+            svar.init("USRDOCS", "null")
         else:
             success = repair.docs()
             if(success == True):
                 os.chdir("Documents")
-                systemvariables.init("USRDOCS", os.getcwd())
+                svar.init("USRDOCS", os.getcwd())
     else:
         os.chdir("Documents")
-        systemvariables.init("USRDOCS", os.getcwd())
-    os.chdir(systemvariables.read("settingspath"))
-    systemvariables.modify("settingspath", os.getcwd())
+        svar.init("USRDOCS", os.getcwd())
+    os.chdir(svar.read("settingspath"))
+    svar.modify("settingspath", os.getcwd())
     os.chdir("Settings")
-    systemvariables.init("loginfopath", os.getcwd())
+    svar.init("loginfopath", os.getcwd())
     os.chdir("../Source")
-    systemvariables.init("srcpath", os.getcwd())
+    svar.init("srcpath", os.getcwd())
     os.chdir("../../Users")
-    systemvariables.init("usrpath", os.getcwd())
+    svar.init("usrpath", os.getcwd())
     os.chdir("..")
-    systemvariables.init("bshpath", os.getcwd())
+    svar.init("bshpath", os.getcwd())
     # Debug Message
-    if(systemvariables.read("debugMsg") == 1):
-        print(systemvariables.color.YELLOW + systemvariables.color.BOLD + "[Debug]" 
-+ systemvariables.color.END + " Bash: " + os.getcwd())
+    if(svar.read("debugMsg") == 1):
+        print(svar.color.YELLOW + svar.color.BOLD + "[Debug]" 
++ svar.color.END + " Bash: " + os.getcwd())
     os.chdir("temp")
-    systemvariables.init("tmppath", os.getcwd())
+    svar.init("tmppath", os.getcwd())
     os.chdir("..")
 
     # If we want to restart Bash for Windows, we'll need this variable.
-    systemvariables.modifyVoid("restart", 0)
+    svar.modifyVoid("restart", 0)
 
     # Get user name
     cd.go("/")
@@ -268,43 +234,43 @@ systemvariables.color.END + " Bash: Starting!")
 
     # If the system variable for the last directory exists, go to that directory
     # (in case of restart)
-    if(systemvariables.read("startDir") != -1):
-        os.chdir(systemvariables.read("startDir"))
+    if(svar.read("startDir") != -1):
+        os.chdir(svar.read("startDir"))
 
     # Reset the lastdir variable
-    systemvariables.modify("lastdir", "")
+    svar.modify("lastdir", "")
 
     # If the user has used Ctrl + C, quit without crashing
     try:
         # Do this until told to exit
         while(True):
             # Change display depending on where the user is in the file system
-            if(os.getcwd() == systemvariables.read("ROOT")):
+            if(os.getcwd() == svar.read("ROOT")):
                 display = "/"
-            elif(os.getcwd() == systemvariables.read("HOME")):
+            elif(os.getcwd() == svar.read("HOME")):
                 display = "~"
-            elif(os.getcwd() == systemvariables.read("USRDOCS")):
+            elif(os.getcwd() == svar.read("USRDOCS")):
                 display = "~/Documents"
-            elif(os.getcwd() == systemvariables.read("settingspath")):
+            elif(os.getcwd() == svar.read("settingspath")):
                 display = "/Bash/Bash"
-            elif(os.getcwd() == systemvariables.read("loginfopath")):
+            elif(os.getcwd() == svar.read("loginfopath")):
                 display = "/Bash/Bash/Settings"
-            elif(os.getcwd() == systemvariables.read("srcpath")):
+            elif(os.getcwd() == svar.read("srcpath")):
                 display = "/Bash/Bash/Source"
-            elif(os.getcwd() == systemvariables.read("usrpath")):
+            elif(os.getcwd() == svar.read("usrpath")):
                 display = "/Bash/Users"
-            elif(os.getcwd() == systemvariables.read("exepath")):
+            elif(os.getcwd() == svar.read("exepath")):
                 display = "/Bash/Bash/Source/Include"
-            elif(os.getcwd() == systemvariables.read("bshpath")):
+            elif(os.getcwd() == svar.read("bshpath")):
                 display = "/Bash"
             else:
                 display = os.getcwd()
                 
             # Prompt. If color prompt is enabled, use color.
-            if(systemvariables.read("colorPrompt") == 1):
-                command = input(systemvariables.color.BOLD + 
-systemvariables.color.GREEN + usr + "@" + socket.gethostname() + systemvariables.color.END + 
-":" + systemvariables.color.BOLD + systemvariables.color.BLUE + display + systemvariables.color.END + 
+            if(svar.read("colorPrompt") == 1):
+                command = input(svar.color.BOLD + 
+svar.color.GREEN + usr + "@" + socket.gethostname() + svar.color.END + 
+":" + svar.color.BOLD + svar.color.BLUE + display + svar.color.END + 
 "$ ")
             else:
                 command = input(usr + "@" + socket.gethostname() + ":" + display + "$ ")
