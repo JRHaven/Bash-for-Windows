@@ -45,8 +45,9 @@ def autoRun(autorun):
         bash.runcmd(commands[j])
         j += 1
 
-# Login Prompt
+# Login
 def logon():
+    os.chdir(systemvariables.read("settingspath") + "/Settings")
     # If the prompt.bws file doesn't exist, call on repair script to initialize one.
     if(os.path.exists("prompt.bws") == False):
         if(repair.promptInit(os.getcwd()) == 1):

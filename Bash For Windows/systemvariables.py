@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2021 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -18,6 +18,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # systemvariables holds all variables open to all parts of the system who import them. The variables can be set, modified,
 # and read depending on what a script may need to do with them. The end user may only see what are in the variables through
 # means of the lsvars and echo commands.
+
+# Import the OS library
+import os
 
 # Put any arrays seperately, we cannot handle arrays in the dynamic format of variables.
 directorystack = ["","","","","","","",""]
@@ -87,3 +90,23 @@ def init(name, conts):
             print(color.YELLOW + color.BOLD + "[Debug]" + color.END + " New Init! Name:", name, "Value:", conts)
         varsNames.append(name)
         varConts.append(conts)
+
+
+
+# This will hold universal data set by me and not (easily) changed by the system
+class fixedData:
+    verStr = "2.1d"
+    verNum = 2.1
+    inDev = True
+
+    # An update ver.bws function
+    def updateVer():
+        oldPWD = os.getcwd()
+        if(lookupIndex("settingspath") != -1):
+            os.chdir(read("settingspath") + "/Settings")
+            verbws = open("ver.bws", "w")
+            # Change Below Tambien!!!
+            verbws.write("2.1d")
+            # Change Above Tambien!!!
+            verbws.close()
+            os.chdir(oldPWD)

@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -28,7 +28,3 @@ def get():
     namefile = open("Settings/ivhzadgz.bws", "w")
     namefile.write(username)
     namefile.close
-    password = input("What Password?                         # ")
-    passfile = open("Settings/kvnnadgz.bws", "w")
-    passfile.write(password)
-    passfile.close

@@ -132,6 +132,10 @@ def runcmd(command):
         mkdir.create(argsArr)
     elif(command == "date"):
         date.show(argsArr)
+    elif(command == "update-bws-ver"):
+        print("Updating the ver.bws file to version", svar.fixedData.ver + "...")
+        svar.fixedData.updateVer()
+        print("...done")
     elif(command == "restart"):
         # Debug Message
         if(svar.read("debugMsg") == 1):

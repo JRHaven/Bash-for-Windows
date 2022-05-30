@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2021 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -22,15 +22,19 @@ import os
 import username
 import systemvariables, mkdir
 
-# Repair for anything missing in the base folder
 # Repair for anything missing in the base of the user folder
 def baseusrrepair():
+    # Get where we are now so we can return to it later
+    oldPWD = os.getcwd()
+
     # We need to be in this directory, stored as a System Variable we
     # set at Startup
     os.chdir(systemvariables.read("settingspath"))
 
     # If needed, create a new user account
-    if((os.path.exists("Settings/ivhzadgz.bws") == False) or (os.path.exists("Settings/kvnnadgz.bws") == False)):
+    if(os.path.exists("Settings/ivhzadgz.bws") == False):
+        if(os.path.exists("Settings") == False):
+            os.mkdir("Settings")
         username.get()
     
     print("Solving Problems...")
@@ -41,76 +45,18 @@ def baseusrrepair():
     # Put the contents of the username in a variable so we can use
     # it any time without having to be in that directory
     usrname = usrnam.read()
-
-    # We don't need the origonal variable anymore
     usrnam.close()
 
     # Start Recreating Folders
     os.chdir("..")
-    os.mkdir("Users")
-    os.chdir("Users")
-    os.mkdir(usrname + "/")
-    os.chdir(usrname)
+    os.mkdir("usrdata")
+    os.chdir("usrdata")
     os.mkdir("Documents")
     os.mkdir("Downloads")
 
     # Success message and go to the correct directory
     print("Repair has solved the problem")
-    os.chdir(systemvariables.read("exepath"))
-    
-# Like the function we just had, but only repairs in the user's personal folder
-def baseusrfilerepair():
-    # We need to be in this directory, stored as a System Variable we
-    # set at Startup
-    os.chdir(systemvariables.read("settingspath"))
-
-    # If needed, create a new user account
-    if((os.path.exists("Settings/ivhzadgz.bws") == False) or (os.path.exists("Settings/kvnnadgz.bws") == False)):
-        username.get()
-    
-    print("Solving Problems...")
-
-    # Get the username information
-    usrnam = open("Settings/ivhzadgz.bws")
-
-    # Put the contents of the username in a variable so we can use
-    # it any time without having to be in that directory
-    usrname = usrnam.read()
-
-    # We don't need the origonal variable anymore
-    usrnam.close()
-
-    # Start Recreating Folders
-    os.chdir("../Users")
-    os.mkdir(usrname + "/")
-    os.chdir(usrname)
-    os.mkdir("Documents")
-    os.mkdir("Downloads")
-
-    # Success message and go to the correct directory
-    print("Repair has solved the problem")
-    os.chdir(systemvariables.read("exepath"))
-    
-# Repair for anything missing in the settings folder
-def settingsrepair():
-    print("Solving Problems...")
-    os.chdir(systemvariables.read("exepath") + "/../..")
-    os.mkdir("Settings")
-    username.get()
-    os.chdir(systemvariables.read("exepath") + "/../..")
-
-# Repair the Documents Folder
-def docs():
-    print("Solving Problems")
-    os.chdir(systemvariables.read("HOME"))
-    mkdir.create(["Documents"])
-    if(os.path.exists("Documents") == True):
-        print("Success! Note: Anything that was in the Documents folder before was deleted.")
-        return True
-    else:
-        systemvariables.modifyVoid("USRDOCS", "null")
-        print("Failed. USRDOCS Variable set as null.")
-        return False
+    os.chdir(oldPWD)
 
 def promptInit(pth):
     os.chdir(pth)
