@@ -19,7 +19,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Import libraries
 from time import sleep
-import platform, os, shutil
+import os, shutil
 # If we are not in the right place, get us to the right place
 if(os.path.exists(os.getcwd() + "/../Include") == False):
     os.chdir("Bash/Bash/Source/Include")
@@ -28,12 +28,6 @@ import bash, os.path, username, usrmgr, repair, systemvariables, time
 # The commented out lines are for me to use for debugging purposes only.
 #print(os.getcwd())
 #print(os.path.dirname(os.path.realpath(__file__)))
-
-# Check to make sure we are running on Windows and if not start bash
-#if(platform.system() != "Windows"):
-#    print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-#    os.system("bash")
-#    exit()
 
 # Set a system variable
 systemvariables.init("exepath", os.getcwd())

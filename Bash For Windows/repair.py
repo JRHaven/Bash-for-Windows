@@ -76,11 +76,11 @@ are optional variables that directly corellate with Bash for Windows itself,\n# 
         prompt.write("from within Bash for Windows. To enable them, just uncomment them by removing the hash mark in front of them.\n")
         prompt.write("# Although Bash for Windows shouldn't care if these aren't in this file, because some of them are for experimental use,\
 you should keep these in the file.\n\n# To add more variables, it is suggested for this file to stay organized to put any ")
-        prompt.write("of your own variables under this first set of variables.\n# Any variables before the \"protectend\" line will be\
-read and write protected, only avalible to the system or an internally elevated user.\n")
+        prompt.write("of your own variables under this first set of variables.\n")
         prompt.write("#debugMsg=1\n")
         prompt.write("#varTrans=1\n")
         prompt.write("#colorPrompt=1\n")
+        prompt.write("#disableOSCheck=1\n")
         prompt.write("\n# Put your custom variables below:\n")
         prompt.close()
         return 0

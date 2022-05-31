@@ -73,16 +73,11 @@ functionality.")
             file = open("prompt.bws", "r")
             promptConfigTxt = file.read()
             file.close()
-            txtOnLine = [""]
             j = 0
 
             # Store each line of text in an array
-            for i in promptConfigTxt:
-                if(i == "\n"):
-                    txtOnLine.append("")
-                    j += 1
-                    continue
-                txtOnLine[j] = txtOnLine[j] + i
+            txtOnLine = promptConfigTxt.split("\n")
+
             # Seperate each value with equals sign and put them in a system variable, unless it has
             # a # as it's first character
             j = 0
@@ -92,22 +87,13 @@ functionality.")
                 varConts = ""
                 shift = 0
                 l = 0
-                for k in txtOnLine[j]:
-                    if((l == 0) and (k == "#")):
-                        break
-                    if(k == "="):
-                        shift = 1
-                        continue
-                    if(shift == 0):
-                        varNam = varNam + k
-                    else:
-                        varConts = varConts + k
-                    l += 1
-                if(varNam != ""):
-                    systemvariables.init(varNam, varConts)
+                if(i != ""):
+                    if((i[0] != "#") and ("=" in i)):
+                        var = i.split("=")
+                        systemvariables.init(var[0], var[1])
                 j += 1
             
-            # The varTrans variable's value should be converted into an integer, same for debugMsg and colorPrompt
+            # The variables that come with the prompt.bws file should be turned into integers
             if((systemvariables.read("varTrans") == "1")):
                 systemvariables.modifyVoid("varTrans", 1)
             else:
@@ -123,6 +109,19 @@ functionality.")
             else:
                 if(systemvariables.read("colorPrompt") != -1):
                     systemvariables.modifyVoid("colorPrompt", 0)
+            if((systemvariables.read("colorPrompt") == "1")):
+                systemvariables.modifyVoid("colorPrompt", 1)
+            else:
+                if(systemvariables.read("colorPrompt") != -1):
+                    systemvariables.modifyVoid("colorPrompt", 0)
+            if((systemvariables.read("disableOSCheck") == "1")):
+                systemvariables.modifyVoid("disableOSCheck", 1)
+            else:
+                if(systemvariables.read("disableOSCheck") != -1):
+                    systemvariables.modifyVoid("disableOSCheck", 0)
+            
+            # Run an OS Check
+            oschk.check()
             
             # We need to go to the parent directory
             os.chdir("..")

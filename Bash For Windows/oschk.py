@@ -19,11 +19,15 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # This script's job is to double check to make sure that we are indeed running Windows.
 
 # Import our library
-import platform, os
+import platform, os, systemvariables
 
 # Main Function
 def check():
     if(platform.system() != "Windows"):
-        print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
-        os.system("bash")
-        exit()
+        # Only do this if it wasn't disabled by the user in prompt.bws
+        if(systemvariables.read("disableOSCheck") != 1):
+            print("Bash for Windows has seen that you are not using Windows. Launching Bash...")
+            os.system("bash")
+            exit()
+        else:
+            print("WARNING: You aren't running Windows. Expect things to not work right!")

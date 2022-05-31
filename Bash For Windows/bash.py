@@ -21,7 +21,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from time import sleep
 import os, username, ls, cd, pwd, socket, cat
 import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
-import mv, oschk, repair, tofile, uname, date, script, shutil
+import mv, repair, tofile, uname, date, script, shutil
 import systemvariables as svar
 
 def runcmd(command):
@@ -176,10 +176,6 @@ def runcmd(command):
 
 # Main function. First Set all other system variables
 def run():
-    print("bash.run called")
-    # Check once again to make sure we are running Windows
-    oschk.check()
-
     # Debug Message
     if(svar.read("debugMsg") == 1):
         print(svar.color.YELLOW + svar.color.BOLD + "[Debug]" + 
