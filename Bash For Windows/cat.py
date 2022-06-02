@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -36,33 +36,6 @@ def show(args):
         show = open(file)
         output = show.read()
         show.close()
-        # If told to do so, either append or overwrite a file where we send all output to
-        if(">>" in args):
-            i = 0
-            index = 0
-            flag = 1
-            for j in args:
-                if(i == 0):
-                    i += 1
-                    continue
-                if(args[i] == ">>"):
-                    index = i + 1
-                    break
-                i += 1
-            tofile.write(">>", output, args[index])
-        elif(">" in args):
-            if(flag == 0):
-                i = 0
-                index = 0
-                for j in args:
-                    if(i == 0):
-                        i += 1
-                        continue
-                    if(args[i] == ">"):
-                        index = i + 1
-                        break
-                    i += 1
-                tofile.write(">", output, args[index])
-        else:
-            # If not told to send output to a file, print to screen.
-            print(output)
+        
+        # Allow tofile.py to handle output
+        tofile.write(args, output)

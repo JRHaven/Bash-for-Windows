@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2021 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -32,7 +32,7 @@ def go(args):
     
     # If we have inputed something special, go to a special place.
     # If not, go to where directed.
-    if(path == "~"):
+    if((path == "~") or (path == "")):
         os.chdir(systemvariables.read("HOME"))
     elif(path == "-"):
         if(systemvariables.read("lastdir") == ""):
@@ -41,43 +41,21 @@ def go(args):
             os.chdir(systemvariables.read("lastdir"))
     elif(path == "/"):
         os.chdir(systemvariables.read("ROOT"))
-    elif(path == "$settingspath"):
-        os.chdir(systemvariables.read("settingspath"))
-    elif(path == "$exepath"):
-        os.chdir(systemvariables.read("exepath"))
-    elif(path == "/Bash"):
-        os.chdir(systemvariables.read("bshpath"))
-    elif(path == "/Bash/Bash"):
-        os.chdir(systemvariables.read("settingspath"))
-    elif(path == "/Bash/Users"):
-        os.chdir(systemvariables.read("usrpath"))
-    elif(path == "/Bash/Bash/Settings"):
-        os.chdir(systemvariables.read("loginfopath"))
-    elif(path == "/Bash/Bash/Source"):
-        os.chdir(systemvariables.read("srcpath"))
-    elif(path == "/Bash/Bash/Source/Include"):
-        os.chdir(systemvariables.read("exepath"))
-    elif(path == "$bshpath"):
-        os.chdir(systemvariables.read("bshpath"))
-    elif(path == "$usrpath"):
-        os.chdir(systemvariables.read("usrpath"))
-    elif(path == "$loginfopath"):
-        os.chdir(systemvariables.read("loginfopath"))
-    elif(path == "$srcpath"):
-        os.chdir(systemvariables.read("srcpath"))
-    elif(path == "$USRDOCS"):
-        if(systemvariables.read("USRDOCS") == "null"):
-            print("bash: cd: null: No such file or directory")
-        else:
-            os.chdir(systemvariables.read("USRDOCS"))
+    elif(path[0] == "$"):
+        # This is how we are handling variables, if they aren't already translated by the system
+        # First, get the variable requested by selecting the part of the variable that isn't a $
+        varReq = path.split("$")[1]
+
+        # Verification and changing of path
+        if(systemvariables.lookupIndex(varReq) != -1):
+            pathReq = systemvariables.read(varReq)
+            if(os.path.exists(pathReq) == True):
+                os.chdir(pathReq)
     else:
-        if(path == ""):
-            go("~")
+        if(os.path.exists(path) == True):
+            os.chdir(path)
         else:
-            if(os.path.exists(path) == True):
-                os.chdir(path)
-            else:
-                print("bash: cd:", path + ": No such file or directory")
+            print("bash: cd:", path + ": No such file or directory")
     # Set the lastdir system variable
     systemvariables.modifyVoid("lastdir", currentdir)
     

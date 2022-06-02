@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -18,9 +18,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # mv is a file to move files or rename files, as a new file to help with multiple arguments
 
-# Libraries
+# Library
 import os
-import filechk
 
 # Main Function
 def move(file, dstfile):
@@ -30,15 +29,10 @@ def move(file, dstfile):
     if((dstfile == "..") or (dstfile == "../")):
         dstfile = "../" + file
     if(os.path.isdir(dstfile) == True):
-        cmdstfile = dstfile
-        dstfile = cmdstfile + "/" + file
+        dstfile = dstfile + "/" + file
     if(dstfile.find("/") != -1):
-        for i in dstfile:
-            if(dstfile[j] == "/"):
-                break
-            holder = holder + dstfile[j]
-            j += 1
-    if(filechk.check(file) == True):
+        holder = dstfile.split("/")[0]
+    if(os.path.exists(file) == True):
         if(os.path.isdir(holder) == True):
             os.rename(file, dstfile)
         else:

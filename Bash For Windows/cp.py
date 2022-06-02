@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -18,10 +18,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # cp is a basic script that copies a file
 
 # Libraries
-import filechk
 import os
 
-# Main Function. First checks if the file wanted exists
+# Main Function. First checks if the file wanted exists, then call system command to copy
 def copy(argsArr):
     length = len(argsArr) - 1
     if(argsArr[0] == ""):
@@ -36,7 +35,7 @@ def copy(argsArr):
         if(os.path.isdir(dstfile) == True):
             cmdstfile = dstfile
             dstfile = cmdstfile + "/" + srcfile
-        if(filechk.check(srcfile) == True):
+        if(os.path.exists(srcfile) == True):
             cmd = "copy " + srcfile  + " " + dstfile
             os.system(str(cmd))
         else:

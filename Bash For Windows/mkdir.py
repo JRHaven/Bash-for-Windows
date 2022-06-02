@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -24,31 +24,15 @@ import os
 def create(args):
     if("-p" in args):
         i = 0
-        index = 0
-        for j in args:
-            if(args[i] == "-p"):
-                index = i
-                break
-            i += 1
+        index = args.index("-p")
+
         if(index == 0):
             index += 1
         else:
             index -= 1
+
         path = args[index]
-        i = 0
-        j = ""
-        k = 0
-        directories = [""]
-        for j in path:
-            if(path[i] == "/"):
-                directories.append("")
-                k += 1
-                i += 1
-                continue
-            directories[k] = directories[k] + j
-            i += 1
-        i = 0
-        j = 0
+        directories = path.split("/")
         lastDir = os.getcwd()
         for j in directories:
             if(os.path.exists(j) == True):

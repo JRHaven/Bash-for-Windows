@@ -100,13 +100,13 @@ class fixedData:
     inDev = True
 
     # An update ver.bws function
-    def updateVer():
+    def updateVer(verStr):
         oldPWD = os.getcwd()
         if(lookupIndex("settingspath") != -1):
             os.chdir(read("settingspath") + "/Settings")
             verbws = open("ver.bws", "w")
             # Change Below Tambien!!!
-            verbws.write("2.1d")
+            verbws.write(verStr)
             # Change Above Tambien!!!
             verbws.close()
             os.chdir(oldPWD)

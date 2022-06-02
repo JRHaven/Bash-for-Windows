@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -66,41 +66,26 @@ def remove(args):
         if(args[0] == "-r"):
             args.pop(0)
             for j in args:
-                file = args[i]
-                if(os.path.exists(file)):
-                    # Make sure it's' a directory
-                    if(os.path.isdir(file) == True):
-                        if(os.getcwd() == systemvariables.read("HOME")):
-                            if(file == "Documents"):
-                                force = input("rm: remove write-protected directory '" + file + "'? ")
-                                if((force == "y") or (force == "Y")):
-                                    shutil.rmtree(file)
-                            else:
-                                shutil.rmtree(file)
-                        else:
-                            shutil.rmtree(file)
-                    else:
-                        print("rm: cannot remove '" + file + ": No such file or directory")
+                file = j
+                if(os.path.exists(file) and os.path.isdir(file)):
+                    shutil.rmtree(file)
                 else:
                     print("rm: cannot remove '" + file + ": No such file or directory")
                 i += 1
         elif(args[lastIndex] == "-r"):
             args.pop(lastIndex)
             for j in args:
-                file = args[i]
-                if(os.path.exists(file)):
-                    # Make sure it isn't a directory
-                    if(os.path.isdir(file) == True):
-                        shutil.rmtree(file)
-                    else:
-                        os.remove(file)
+                file = j
+                if(os.path.exists(file) and os.path.isdir(file)):
+                    shutil.rmtree(file)
                 else:
                     print("rm: cannot remove '" + file + ": No such file or directory")
                 i += 1
     else:
         for j in args:
-            file = args[i]
-            # If it exists, remove it. If not, display a message
+            file = j
+
+            # If it exists and is a file, remove it. If not, display a message
             if(os.path.exists(file)):
                 # Make sure it isn't a directory
                 if(os.path.isfile(file) == True):

@@ -27,17 +27,12 @@ def reg(args):
     ifvar = False
     i = 0
     endstring = ""
-    #print(stringprt.find("$", 0, 1))
     
     # See if the first character of a string is a dollar sign, the symbol that declares the want of a
     # system variable, but ONLY if system variable varTrans is false.
     if(systemvariables.read("varTrans") == False):
-        if(stringprt.find("$", 0, 1) == 0):
+        if(stringprt[0] == "$"):
             ifvar = True
-        else:
-            ifvar = False
-    else:
-        ifvar = False
     
     # If there is a dollar sign, find out what variable we want and print it out. If not, print out
     # inputted text

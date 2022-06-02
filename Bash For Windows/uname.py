@@ -15,7 +15,7 @@ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVE
 FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 '''
-import platform, tofile, os
+import platform, tofile, os, systemvariables
 
 def list(args):
     output = ""
@@ -40,11 +40,12 @@ def list(args):
     elif((args[0] == "-o") or (args[0] == "--operating-system")):
         output = output + platform.system()
     elif((args[0] == "-i") or (args[0] == "--information") or (args[0] == "--version")):
-        output = output + "Bash for Windows: The Bourne Again Shell! Version 2.1 [IN DEVELOPMENT]\n\nAll\
- the code is avalible at GitHub! Check it out! Use the -g argument to be taken to the page!\
+        output = output + "Bash for Windows: The Bourne Again Shell! Version " + systemvariables.fixedData.verStr + "\n\n \
+All the code is avalible at GitHub! Check it out! Use the -g argument to be taken to the page! \
 \n\nBash for Windows is under the MIT License. Check it out on GitHub as well."
     elif((args[0] == "-g") or (args[0] == "--github")):
-        output = output + "Bash for Windows: The Bourne Again Shell! Version 2.0 [IN DEVELOPMENT]\nTaking you to the GitHub page...\n"
+        output = output + "Bash for Windows: The Bourne Again Shell! " + systemvariables.fixedData.verStr + "\n\
+Taking you to the GitHub page...\n"
         os.system("iexplore https://github.com/JR-Tech-and-Software/Bash-for-Windows")
     elif(args[0] == "--help"):
         output = output + "Bash for Windows: The Bourne Again Shell!\nuname updated for version 1.3\
@@ -58,5 +59,5 @@ Prints hostname to the Screen\n-v, --kernel-version: Prints System Version to th
  Page of Bash for Windows\n--help: Prints this help screen"
     else:
         if((args[0] != ">") and (args[0] != ">>")):
-            print("uname: extra operand ‘" + args[0] + "`: Try again with --help")
+            print("uname: extra operand `" + args[0] + "`: Try again with --help")
     tofile.write(args, output)

@@ -23,7 +23,7 @@ import os, shutil
 # If we are not in the right place, get us to the right place
 if(os.path.exists(os.getcwd() + "/../Include") == False):
     os.chdir("Bash/Bash/Source/Include")
-import bash, os.path, username, usrmgr, repair, systemvariables, time
+import bash, os.path, usrmgr, repair, systemvariables, time
 
 # The commented out lines are for me to use for debugging purposes only.
 #print(os.getcwd())
@@ -60,8 +60,14 @@ os.chdir(systemvariables.read("settingspath") + "/Settings")
 try:
     if(os.path.exists("ver.bws") == False):
         ver = open("ver.bws", "w")
+        print("WARNING: Bash for Windows could not find a ver.bws file, and thus isn't certain of \
+it's version. Writing a ver.bws file, but the system may be unstable...\n")
+        print("If you are coming from a version before 2.1, this is probably because the ver.bws \
+file is new as of 2.1.\nYou may want to look at the release notes on GitHub, as changes have been made \
+that will probably break your installation of Bash for Windows if you don't take actions outlined there.")
         ver.write(systemvariables.fixedData.verStr)
         ver.close()
+        sleep(5)
     else:
         ver = open("ver.bws", "r")
         verstr = ver.read()
@@ -102,26 +108,33 @@ to update the version string")
             # To be moved to seperate script in the future
             if(error == False):
                 if(verNum < 2.1):
-                    print("Bash for Windows has changed for this version and changes need to take place \
-to the folder structure of Bash for Windows for it to continue to be operational.\nIf you do not want Bash for \
-Windows to touch your data, you can skip this operation for now. However, Bash for Windows will probably crash.\n\
-It is highly recommended to let Bash for Windows proceed. To see what changes will be made, check the changelog on the GitHub.")
-                    approval = input("Should Bash for Windows continue? [Y,n] ")
-                    if(approval.lower() != "n"):
-                        if(os.path.exists("ivhzadgz.bws") == False):
-                            print("\nBash for Windows ran into an issue! The system could not find the username. Bash for Windows \
-cannot continue. Abort.")
-                            exit(1)
-                        usr = open("ivhzadgz.bws", "r")
-                        usrnam = usr.read()
-                        usr.close()
-                        os.chdir("../..")
-                        shutil.copytree("Users/" + usrnam, "usrdata")
-                        shutil.rmtree("Users")
-                        os.system("cls")
-                        print("System successfully migrated!")
-                        systemvariables.fixedData.updateVer()
+                    os.chdir("../..")
+                    if(os.path.exists("Users")):
                         os.chdir("Bash/Settings")
+                        print("Bash for Windows has changed for this version and changes need to take place \
+    to the folder structure of Bash for Windows for it to continue to be operational.\nIf you do not want Bash for \
+    Windows to touch your data, you can skip this operation for now. However, Bash for Windows will probably crash.\n\
+    It is highly recommended to let Bash for Windows proceed. To see what changes will be made, check the changelog on the GitHub.")
+                        approval = input("Should Bash for Windows continue? [Y,n] ")
+                        if(approval.lower() != "n"):
+                            if(os.path.exists("ivhzadgz.bws") == False):
+                                print("\nBash for Windows ran into an issue! The system could not find the username. Bash for Windows \
+    cannot continue. Abort.")
+                                exit(1)
+                            usr = open("ivhzadgz.bws", "r")
+                            usrnam = usr.read()
+                            usr.close()
+                            os.chdir("../..")
+                            shutil.copytree("Users/" + usrnam, "usrdata")
+                            shutil.rmtree("Users")
+                            os.system("cls")
+                            print("System successfully migrated!")
+                            systemvariables.fixedData.updateVer()
+                            os.chdir("Bash/Settings")
+                    else:
+                        print("NOTE: Your ver.bws file is reporting a different version than it appears \
+you are running.\nTo fix this, please run the \"update-bws-ver\" command to update your \
+ver.bws file.\n")
 
 except KeyboardInterrupt:
     exit(0)

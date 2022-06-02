@@ -1,7 +1,7 @@
 '''
 This file is under the MIT License.
 
-Copyright 2019-2020 Jeremiah Haven
+Copyright 2019-2022 Jeremiah Haven
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files 
 (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, 
@@ -19,22 +19,18 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # text editor.
 
 # Libraries
-import os
-import touch
-import ls
+import os, touch, ls
 
 # Main Function. First get a listing of the directory using the ls script
 def write(args):
     theList = ls.list()
-    i = 0
+
     # Find out if there is a file called the same as the input text. If not, create the file using the touch
     # script before opening notepad
-    for j in args:
-        filename = args[i]
-        if(any(filename in s for s in theList)):
+    for i in args:
+        filename = i
+        if(filename in theList):
             os.system("notepad " + filename)
         else:
-            giveArgs = [filename]
-            touch.write(giveArgs)
+            touch.write([filename])
             os.system("notepad " + filename)
-        i += 1

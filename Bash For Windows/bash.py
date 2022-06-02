@@ -19,8 +19,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Libraries
 from time import sleep
-import os, username, ls, cd, pwd, socket, cat
-import echo, nano, touch, rm, filechk, cp, pushd, popd, mkdir
+import os, ls, cd, socket, cat
+import echo, nano, touch, rm, cp, pushd, popd, mkdir
 import mv, repair, tofile, uname, date, script, shutil
 import systemvariables as svar
 
@@ -133,9 +133,9 @@ def runcmd(command):
     elif(command == "date"):
         date.show(argsArr)
     elif(command == "update-bws-ver"):
-        print("Updating the ver.bws file to version", svar.fixedData.ver + "...")
-        svar.fixedData.updateVer()
-        print("...done")
+        print("Updating the ver.bws file to version", svar.fixedData.verStr + "...")
+        svar.fixedData.updateVer(svar.fixedData.verStr)
+        print("...done. A Bash for Windows restart is recommended.")
     elif(command == "restart"):
         # Debug Message
         if(svar.read("debugMsg") == 1):
