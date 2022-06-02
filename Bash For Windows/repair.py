@@ -18,9 +18,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Repair is a script that tries to solve any problems that comes up
 
 # Libraries
-import os
-import username
-import systemvariables, mkdir
+import os, systemvariables, mkdir
 
 # Repair for anything missing in the base of the user folder
 def baseusrrepair():
@@ -35,7 +33,9 @@ def baseusrrepair():
     if(os.path.exists("Settings/ivhzadgz.bws") == False):
         if(os.path.exists("Settings") == False):
             os.mkdir("Settings")
-        username.get()
+        name = open("Settings/ivhzadgz.bws", "w")
+        name.write(input("What do you want your username to be? "))
+        name.close()
     
     print("Solving Problems...")
 
