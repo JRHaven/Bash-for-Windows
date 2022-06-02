@@ -95,9 +95,9 @@ def init(name, conts):
 
 # This will hold universal data set by me and not (easily) changed by the system
 class fixedData:
-    verStr = "2.1d"
+    verStr = "2.1"
     verNum = 2.1
-    inDev = True
+    inDev = False
 
     # An update ver.bws function
     def updateVer(verStr):
