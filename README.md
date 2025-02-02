@@ -1,3 +1,8 @@
+# Archival Notice
+I've decided to archive this project. I have no intention of developing it any farther now that I am in college.
+I no longer have the time nor the want to continue work on it. It served an instrumental role in my learning
+how to work with strings, file systems, and operating systems.
+
 # Bash for Windows
 This is a project written in Python that I have been working on off and on over the years. Bash for Windows
 attempts to recreate a Bash-like environment that can work on Windows, that being versions of Windows
